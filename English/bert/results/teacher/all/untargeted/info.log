@@ -1,0 +1,102 @@
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 3,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Begin Attack
+('const confidence:', 10.0, 0.0)
+('const confidence lr:', 10.0, 0.0, 0.15)
+('tot:', 112)
+avg_seq_len: 9.0
+avg_diff: 1.4
+avg_diff_rate: 16.0%
+orig_correct: 100.0%
+adv_correct: 25.0%
+targeted successful rate: 25.0%
+*untargeted successful rate: 75.0%
+('tot:', 211)
+avg_seq_len: 8.8
+avg_diff: 1.4
+avg_diff_rate: 15.9%
+orig_correct: 100.0%
+adv_correct: 25.1%
+targeted successful rate: 25.1%
+*untargeted successful rate: 74.9%
+('tot:', 266)
+avg_seq_len: 9.0
+avg_diff: 1.4
+avg_diff_rate: 15.7%
+orig_correct: 100.0%
+adv_correct: 24.4%
+targeted successful rate: 24.4%
+*untargeted successful rate: 75.6%
+('tot:', 314)
+avg_seq_len: 8.9
+avg_diff: 1.4
+avg_diff_rate: 15.5%
+orig_correct: 100.0%
+adv_correct: 24.8%
+targeted successful rate: 24.8%
+*untargeted successful rate: 75.2%
+('tot:', 359)
+avg_seq_len: 8.9
+avg_diff: 1.4
+avg_diff_rate: 15.4%
+orig_correct: 100.0%
+adv_correct: 25.3%
+targeted successful rate: 25.3%
+*untargeted successful rate: 74.7%
+('tot:', 515)
+avg_seq_len: 9.1
+avg_diff: 1.4
+avg_diff_rate: 15.5%
+orig_correct: 100.0%
+adv_correct: 25.0%
+targeted successful rate: 25.0%
+*untargeted successful rate: 75.0%
+('tot:', 605)
+avg_seq_len: 9.0
+avg_diff: 1.4
+avg_diff_rate: 15.4%
+orig_correct: 100.0%
+adv_correct: 25.6%
+targeted successful rate: 25.6%
+*untargeted successful rate: 74.4%
+('const confidence:', 10.0, 0.0)
+Start validation
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+['attack.py', '--function', 'all', '--const', '10', '--confidence', '0', '--lr', '0.15', '--load', 'fever/bert-fever-uncased.pth', '--test-model', 'fever/bert-fever-uncased.pth', '--test-data', 'fever/test-data-cooked.pkl', '--untargeted']
+orig acc：100.0%
+attack success：449.0
+orig pred success：605.0
+success rate：74.2%
+change rate: 15.4%
+original ppl: 52.7
+adv ppl: 146.4
+bert score: 0.707

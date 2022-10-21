@@ -1,0 +1,12 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "attack",
+            "type": "shell",
+            "command": "CUDA_VISIBLE_DEVICES=3 python attack.py --function=cluster --const=10 --confidence=0 --lr=0.15 --load=fever2/bert-fever2-uncased.pth --test-model=fever2/bert-fever2-uncased.pth --test-data=fever2/test-data-cooked.pkl --untargeted"
+        }
+    ]
+}

@@ -11,8 +11,8 @@ from pytorch_transformers import BertTokenizer, BertModel, BertForMaskedLM
 
 class YelpDataset(Dataset):
     def __init__(self, path):
-        cache_path = 'FC_' + path
-        save_path = 'FT_' + cache_path
+        cache_path = path + '.FC-cache'
+        save_path = cache_path + '.FT-cache'
         self.data = joblib.load(cache_path)
         bug_data = []
         for i, data in enumerate(tqdm(self.data)):
@@ -150,7 +150,7 @@ def get_bug_dict(indexed_tokens):
 
 
 if __name__ == '__main__':
-    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+    tokenizer = BertTokenizer.from_pretrained("bert-base-cased")
     word_list = joblib.load(args.word_list)
     torch.manual_seed(args.seed)
     test_data = YelpDataset(args.test_data)

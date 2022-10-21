@@ -1,0 +1,143 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "temp",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}/English/bert/fever",
+            "args": ["--train-data=fever/fever-train.pkl", "--test-data=fever/fever-test.pkl", "--batch-size=32", "--epochs=4"],
+        },
+        {
+            "name": "fine tuning",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}/English/bert",
+            "args": ["--train-data=fever/new-bert_train.jsonl", "--test-data=fever/new-bert_test.jsonl", "--batch-size=4", "--epochs=4", "--save-path=fever/bert-claim-evidence.pth"],
+        },
+        {
+            "name": "prepare fever KernelGAT",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}/English/bert",
+            "args": [
+                "--fever=/home/tuh17884/codes/KernelGAT/data/bert_eval.json", 
+                "--bert_pretrain=/home/tuh17884/codes/KernelGAT/bert_base",
+                "--checkpoint=/home/tuh17884/codes/KernelGAT/checkpoint/kgat/model.best.pt",
+            ],
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "3"
+            }
+        },
+        {
+            "name": "prepare fever",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}/English/bert",
+            "args": [
+                "--fever=fever/fever-eval.jsonl", 
+                "--model=fever/bert-fever-cased.pth"
+            ],
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "3"
+            }
+        },
+        {
+            "name": "prepare fever2",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}/English/bert",
+            "args": [
+                "--train-data=fever2/train-data.pkl",
+                "--test-data=fever2/test-data.pkl", 
+                "--model=fever2/bert-fever2-uncased.pth"
+            ],
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "2"
+            }
+        },
+        {
+            "name": "precess data",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}/English/bert",
+            "args": [
+                "--test-data=/home/tuh17884/codes/KernelGAT/data/bert_eval.pkl", 
+                "--embedding-data=/home/tuh17884/codes/KernelGAT/data/word-embedding-bert_eval.pt",
+                "--word-list=/home/tuh17884/codes/KernelGAT/data/word-list-bert_eval.pkl",
+                "--bert_pretrain=/home/tuh17884/codes/KernelGAT/bert_base",
+                "--checkpoint=/home/tuh17884/codes/KernelGAT/checkpoint/kgat/model.best.pt",
+            ],
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "3"
+            }
+        },
+        {
+            "name": "attack",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}/English/bert",
+            "args": [
+                "--function=cluster",
+                "--const=10",
+                "--confidence=0",
+                "--lr=0.15",
+                "--load=fever/bert-fever-cased.pth",
+                "--test-model=fever/bert-fever-cased.pth",
+                "--test-data=fever/fever-test-tokenized.pkl",
+                "--batch-size=1"
+            ],
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "0",
+                // "CUDA_LAUNCH_BLOCKING": "1"
+            }
+        },
+        {
+            "name": "attack KernelGAT-BERT",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}/English/bert",
+            "args": [
+                "--function=cluster",
+                "--const=10",
+                "--confidence=0",
+                "--lr=0.15",
+                "--test_path", "~/codes/KernelGAT/data/bert_eval.json",
+                "--bert_pretrain", "~/codes/KernelGAT/bert_base",
+                "--checkpoint", "~/codes/KernelGAT/checkpoint/kgat/model.best.pt",
+
+            ],
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "0",
+                // "CUDA_LAUNCH_BLOCKING": "1"
+            }
+        },
+    ]
+}

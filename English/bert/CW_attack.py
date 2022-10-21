@@ -8,7 +8,7 @@ from util import args, logger
 
 class CarliniL2:
 
-    def __init__(self, targeted=True, search_steps=None, max_steps=None, cuda=False, debug=False, num_classes=5):
+    def __init__(self, targeted=True, search_steps=None, max_steps=None, cuda=False, debug=False, num_classes=3):
         logger.info(("const confidence lr:", args.const, args.confidence, args.lr))
         self.debug = debug
         self.targeted = targeted

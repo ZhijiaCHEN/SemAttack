@@ -12,8 +12,8 @@ from collections import Counter
 
 class YelpDataset(Dataset):
     def __init__(self, path):
-        cache_path = 'FT_FC_' + path
-        save_path = 'all_' + path
+        cache_path = path + '.FC-cache.FT-cache'
+        save_path = '.'.join(path.split('.')[:-1]) + '-cooked.pkl'
         self.data = joblib.load(cache_path)
         knowledge_data = []
         for i, data in enumerate(tqdm(self.data)):
@@ -85,7 +85,7 @@ def get_knowledge_dict(indexed_tokens):
 
 
 if __name__ == '__main__':
-    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+    tokenizer = BertTokenizer.from_pretrained("bert-base-cased")
     word_list = joblib.load(args.word_list)
 
     # Set the random seed manually for reproducibility.

@@ -1,4 +1,4 @@
-import random
+import random, os
 import codecs
 import joblib
 import os
@@ -18,44 +18,22 @@ import sys
 from transformers import GPT2LMHeadModel, GPT2TokenizerFast
 from bert_score import BERTScorer
 
+from pytorch_pretrained_bert.tokenization import BertTokenizer as BertTokenizer2
+from KernelGAT_data_loader import DataLoaderTest
+from bert_model import BertForSequenceEncoder
+import json
+from models import inference_model
+
 
 class YelpDataset(Dataset):
-    def __init__(self, path_or_raw, raw=False, max_len = 130):
+    def __init__(self, path_or_raw, raw=False):
         self.raw = raw
-        self.max_len = max_len
         if not self.raw:
             self.data = joblib.load(path_or_raw)
-            # self.data = random.sample(joblib.load(path_or_raw), 1200)
         else:
+            self.max_len = 128
             self.data = path_or_raw
-            tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
-            for data in self.data:
-                data['seq'] = tokenizer.encode(('[CLS] ' + data['adv_text']))
-                if len(data['seq']) > self.max_len:
-                    data['seq'] = data['seq'][:self.max_len]
-
-    def __len__(self):
-        if not self.raw:
-            return len(self.data) // args.scale
-        else:
-            return len(self.data)
-
-    def __getitem__(self, index):
-        if not self.raw:
-            return self.data[index * args.scale]
-        else:
-            return self.data[index]
-
-class BertFever(Dataset):
-    def __init__(self, path_or_raw, raw=False, max_len = 130):
-        self.raw = raw
-        self.max_len = max_len
-        if not self.raw:
-            self.data = joblib.load(path_or_raw)
-            # self.data = random.sample(joblib.load(path_or_raw), 1200)
-        else:
-            self.data = path_or_raw
-            tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
+            tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
             for data in self.data:
                 data['seq'] = tokenizer.encode(('[CLS] ' + data['adv_text']))
                 if len(data['seq']) > self.max_len:
@@ -232,9 +210,9 @@ def cw_word_attack(data_val):
     tot_len = 0
     adv_pickle = []
 
-    test_batch = DataLoader(data_val, batch_size=args.batch_size, shuffle=False)
+    # test_batch = DataLoader(data_val, batch_size=args.batch_size, shuffle=False)
     cw = CarliniL2(debug=args.debugging, targeted=not args.untargeted, cuda=True)
-    for batch_index, batch in enumerate(tqdm(test_batch)):
+    for batch_index, batch in enumerate(tqdm(data_val)):
         batch_add_start = batch['add_start'] = []
         batch_add_end = batch['add_end'] = []
         for i, seq in enumerate(batch['seq_len']):
@@ -497,16 +475,12 @@ def validate():
     logger.info('adv ppl: {:.1f}'.format(adv_ppl))
     logger.info('bert score: {:.3f}'.format(bs))
 
-def check_model(model, data_val):
-    model.eval()
-    device = next(model.parameters()).device
+def check_model(data_val):
+
     test_batch = DataLoader(data_val, batch_size=args.batch_size, shuffle=False)
     correct = mistake = 0
-    for batch_index, batch in enumerate(tqdm(test_batch)):
-        # batch['seq'] = torch.stack(batch['seq']).t().to(device)
-        batch['seq'][0][batch['seq_len']] = 102
-        batch['seq_len'] += 1
-        batch['seq'] = batch['seq'].to(device)
+    for batch_index, batch in enumerate(tqdm(test_batch[:10])):
+        batch['seq'] = torch.stack(batch['seq']).t().to(device)
         batch['seq_len'] = batch['seq_len'].to(device)
         label = batch['label'] = batch['label'].to(device)
         # test original acc
@@ -522,36 +496,36 @@ def check_model(model, data_val):
         batch['orig_correct'] = torch.sum((prediction == label).float())
     acc = correct/(correct + mistake)
     print(f"{correct=}, {mistake=}, {acc=}")
-        
+
+def load_KernelGAT(state_dict, device):
+    bert_model = BertForSequenceEncoder.from_pretrained(args.bert_pretrain)
+    bert_model = bert_model.cuda()
+    bert_model.eval()
+    model = inference_model(bert_model, args)
+    model.load_state_dict(torch.load(state_dict)['model'])
+    model = model.to(device)
+    model.eval()
+    return model
+
 if __name__ == '__main__':
     logger.info("Start attack")
-    #model = models.BertC(dropout=args.dropout, num_class=3)
-    
-    # try:
-    #     states = torch.load(args.load, map_location=torch.device('cuda'))
-    #     states['proj.weight'] = states.pop('classifier.weight')
-    #     states['proj.bias'] = states.pop('classifier.bias')
-    #     states.pop('bert.embeddings.position_ids')
-    #     model.load_state_dict(states)
-    # except RuntimeError:
-    # #     model.load_state_dict({k.replace('module.', ''): v for k, v in torch.load(args.load, map_location=torch.device('cuda')).items()})
+    device = torch.device("cuda")
+    model = load_KernelGAT(device)
+    # tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+    # Set the random seed manually for reproducibility.
+    torch.manual_seed(args.seed)
     if torch.cuda.is_available():
         if not args.cuda:
             print("WARNING: You have a CUDA device, so you should probably run with --cuda")
         else:
             torch.cuda.manual_seed(args.seed)
     random.seed(args.seed)
-    test_data = YelpDataset(args.test_data)
-
-    device = torch.device("cuda")
-    # model = model.to(device)
-    # model.eval()
-    states = torch.load(args.load)
-    model = models.Pretrained_Fever_BERT(states).to(device)
-    tokenizer = BertTokenizer.from_pretrained("bert-base-cased")
-    # Set the random seed manually for reproducibility.
-    torch.manual_seed(args.seed)
     
-    check_model(model, test_data)
-    # cw_word_attack(test_data)
-    # validate()
+    # test_data = YelpDataset(args.test_data)
+    label_map = {'SUPPORTS': 0, 'REFUTES': 1, 'NOT ENOUGH INFO': 2}
+    label_list = ['SUPPORTS', 'REFUTES', 'NOT ENOUGH INFO']
+    tokenizer = BertTokenizer2.from_pretrained(args.bert_pretrain, do_lower_case=False)
+    dataset_reader = DataLoaderTest(args.test_path, label_map, tokenizer, args, batch_size=args.batch_size)
+    #check_model(test_data)
+    cw_word_attack(dataset_reader)
+    validate()

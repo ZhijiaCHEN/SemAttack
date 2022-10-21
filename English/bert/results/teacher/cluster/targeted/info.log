@@ -1,0 +1,1207 @@
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 2,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 2,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Begin Attack
+('const confidence:', 10.0, 0.0)
+('const confidence lr:', 10.0, 0.0, 0.15)
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 2,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Begin Attack
+('const confidence:', 10.0, 0.0)
+('const confidence lr:', 10.0, 0.0, 0.15)
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 2,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Begin Attack
+('const confidence:', 10.0, 0.0)
+('const confidence lr:', 10.0, 0.0, 0.15)
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 2,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Begin Attack
+('const confidence:', 10.0, 0.0)
+('const confidence lr:', 10.0, 0.0, 0.15)
+('tot:', 101)
+avg_seq_len: 9.0
+avg_diff: 2.2
+avg_diff_rate: 24.7%
+orig_correct: 92.1%
+adv_correct: 43.6%
+*targeted successful rate: 53.5%
+untargeted successful rate: 56.4%
+('tot:', 118)
+avg_seq_len: 9.1
+avg_diff: 2.2
+avg_diff_rate: 24.6%
+orig_correct: 93.2%
+adv_correct: 44.9%
+*targeted successful rate: 52.5%
+untargeted successful rate: 55.1%
+('const confidence:', 10.0, 0.0)
+Start validation
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+['attack.py', '--function=cluster', '--const=10', '--confidence=0', '--lr=0.15', '--load=fever2/bert-fever2-uncased.pth', '--test-model=fever2/bert-fever2-uncased.pth', '--test-data=fever2/test-data-cooked.pkl']
+orig acc：93.2%
+attack success：57.0
+orig pred success：110.0
+success rate：51.8%
+change rate: 25.6%
+original ppl: 56.6
+adv ppl: 101.0
+bert score: 0.463
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 2,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 2,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Begin Attack
+('const confidence:', 10.0, 0.0)
+('const confidence lr:', 10.0, 0.0, 0.15)
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 2,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Begin Attack
+('const confidence:', 10.0, 0.0)
+('const confidence lr:', 10.0, 0.0, 0.15)
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 2,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 2,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Begin Attack
+('const confidence:', 10.0, 0.0)
+('const confidence lr:', 10.0, 0.0, 0.15)
+('tot:', 701)
+avg_seq_len: 2.0
+avg_diff: 0.1
+avg_diff_rate: 4.5%
+orig_correct: 53.1%
+adv_correct: 47.6%
+*targeted successful rate: 16.8%
+untargeted successful rate: 52.4%
+('tot:', 801)
+avg_seq_len: 2.0
+avg_diff: 0.1
+avg_diff_rate: 4.4%
+orig_correct: 53.3%
+adv_correct: 48.2%
+*targeted successful rate: 16.6%
+untargeted successful rate: 51.8%
+('tot:', 1001)
+avg_seq_len: 1.9
+avg_diff: 0.1
+avg_diff_rate: 4.0%
+orig_correct: 52.0%
+adv_correct: 47.2%
+*targeted successful rate: 16.1%
+untargeted successful rate: 52.8%
+('tot:', 1201)
+avg_seq_len: 1.9
+avg_diff: 0.1
+avg_diff_rate: 4.2%
+orig_correct: 51.2%
+adv_correct: 46.5%
+*targeted successful rate: 16.3%
+untargeted successful rate: 53.5%
+('tot:', 1301)
+avg_seq_len: 2.0
+avg_diff: 0.1
+avg_diff_rate: 4.1%
+orig_correct: 51.1%
+adv_correct: 46.6%
+*targeted successful rate: 16.7%
+untargeted successful rate: 53.4%
+('tot:', 1501)
+avg_seq_len: 2.0
+avg_diff: 0.1
+avg_diff_rate: 4.0%
+orig_correct: 51.2%
+adv_correct: 46.3%
+*targeted successful rate: 16.9%
+untargeted successful rate: 53.7%
+('tot:', 2201)
+avg_seq_len: 1.9
+avg_diff: 0.1
+avg_diff_rate: 3.9%
+orig_correct: 51.7%
+adv_correct: 46.9%
+*targeted successful rate: 16.3%
+untargeted successful rate: 53.1%
+('tot:', 2301)
+avg_seq_len: 2.0
+avg_diff: 0.1
+avg_diff_rate: 3.9%
+orig_correct: 51.4%
+adv_correct: 46.6%
+*targeted successful rate: 16.5%
+untargeted successful rate: 53.4%
+('tot:', 3001)
+avg_seq_len: 2.0
+avg_diff: 0.1
+avg_diff_rate: 3.7%
+orig_correct: 51.2%
+adv_correct: 46.3%
+*targeted successful rate: 16.7%
+untargeted successful rate: 53.7%
+('tot:', 5001)
+avg_seq_len: 1.9
+avg_diff: 0.1
+avg_diff_rate: 3.8%
+orig_correct: 51.1%
+adv_correct: 46.5%
+*targeted successful rate: 16.0%
+untargeted successful rate: 53.5%
+('tot:', 5101)
+avg_seq_len: 1.9
+avg_diff: 0.1
+avg_diff_rate: 3.8%
+orig_correct: 51.1%
+adv_correct: 46.4%
+*targeted successful rate: 16.2%
+untargeted successful rate: 53.6%
+('tot:', 5401)
+avg_seq_len: 1.9
+avg_diff: 0.1
+avg_diff_rate: 3.9%
+orig_correct: 51.2%
+adv_correct: 46.5%
+*targeted successful rate: 16.0%
+untargeted successful rate: 53.5%
+('tot:', 5801)
+avg_seq_len: 1.9
+avg_diff: 0.1
+avg_diff_rate: 4.0%
+orig_correct: 51.4%
+adv_correct: 46.7%
+*targeted successful rate: 15.9%
+untargeted successful rate: 53.3%
+('tot:', 6401)
+avg_seq_len: 1.9
+avg_diff: 0.1
+avg_diff_rate: 3.9%
+orig_correct: 51.3%
+adv_correct: 46.8%
+*targeted successful rate: 16.0%
+untargeted successful rate: 53.2%
+('tot:', 6601)
+avg_seq_len: 1.9
+avg_diff: 0.1
+avg_diff_rate: 3.9%
+orig_correct: 51.1%
+adv_correct: 46.6%
+*targeted successful rate: 16.1%
+untargeted successful rate: 53.4%
+('tot:', 7001)
+avg_seq_len: 1.9
+avg_diff: 0.1
+avg_diff_rate: 3.9%
+orig_correct: 51.0%
+adv_correct: 46.5%
+*targeted successful rate: 16.3%
+untargeted successful rate: 53.5%
+('tot:', 7501)
+avg_seq_len: 1.9
+avg_diff: 0.1
+avg_diff_rate: 3.8%
+orig_correct: 51.0%
+adv_correct: 46.5%
+*targeted successful rate: 16.3%
+untargeted successful rate: 53.5%
+('tot:', 8001)
+avg_seq_len: 1.9
+avg_diff: 0.1
+avg_diff_rate: 3.8%
+orig_correct: 51.1%
+adv_correct: 46.8%
+*targeted successful rate: 16.1%
+untargeted successful rate: 53.2%
+('tot:', 9401)
+avg_seq_len: 1.9
+avg_diff: 0.1
+avg_diff_rate: 3.8%
+orig_correct: 50.8%
+adv_correct: 46.5%
+*targeted successful rate: 16.1%
+untargeted successful rate: 53.5%
+('tot:', 9701)
+avg_seq_len: 1.9
+avg_diff: 0.1
+avg_diff_rate: 3.8%
+orig_correct: 50.8%
+adv_correct: 46.4%
+*targeted successful rate: 16.0%
+untargeted successful rate: 53.6%
+('tot:', 9999)
+avg_seq_len: 1.9
+avg_diff: 0.1
+avg_diff_rate: 3.8%
+orig_correct: 50.8%
+adv_correct: 46.5%
+*targeted successful rate: 16.0%
+untargeted successful rate: 53.5%
+('const confidence:', 10.0, 0.0)
+Start validation
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+['attack.py', '--function=cluster', '--const=10', '--confidence=0', '--lr=0.15', '--load=fever/bert-fever-uncased.pth', '--test-model=fever/bert-fever-uncased.pth', '--test-data=fever/test-data-cooked.pkl']
+orig acc：50.8%
+attack success：256.0
+orig pred success：5084.0
+success rate：5.0%
+change rate: 13.5%
+original ppl: 54.4
+adv ppl: 87.6
+bert score: 0.692
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 2,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Begin Attack
+('const confidence:', 10.0, 0.0)
+('const confidence lr:', 10.0, 0.0, 0.15)
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 2,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Begin Attack
+('const confidence:', 10.0, 0.0)
+('const confidence lr:', 10.0, 0.0, 0.15)
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 2,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Begin Attack
+('const confidence:', 10.0, 0.0)
+('const confidence lr:', 10.0, 0.0, 0.15)
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 2,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Begin Attack
+('const confidence:', 10.0, 0.0)
+('const confidence lr:', 10.0, 0.0, 0.15)
+('tot:', 93)
+avg_seq_len: 8.8
+avg_diff: 2.3
+avg_diff_rate: 26.0%
+orig_correct: 100.0%
+adv_correct: 44.1%
+*targeted successful rate: 52.7%
+untargeted successful rate: 55.9%
+('tot:', 110)
+avg_seq_len: 8.9
+avg_diff: 2.3
+avg_diff_rate: 25.6%
+orig_correct: 100.0%
+adv_correct: 45.5%
+*targeted successful rate: 51.8%
+untargeted successful rate: 54.5%
+('const confidence:', 10.0, 0.0)
+Start validation
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+['/home/tuh17884/codes/SemAttack/English/bert/attack.py', '--function=cluster', '--const=10', '--confidence=0', '--lr=0.15', '--load=fever2/bert-fever2-uncased.pth', '--test-model=fever2/bert-fever2-uncased.pth', '--test-data=fever2/test-data-cooked.pkl']
+orig acc：100.0%
+attack success：57.0
+orig pred success：110.0
+success rate：51.8%
+change rate: 25.6%
+original ppl: 56.6
+adv ppl: 101.0
+bert score: 0.463
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading archive file /home/tuh17884/codes/KernelGAT/bert_base
+Model config {
+  "attention_probs_dropout_prob": 0.1,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "max_position_embeddings": 512,
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "type_vocab_size": 2,
+  "vocab_size": 28996
+}
+
+Weights from pretrained model not used in BertForSequenceEncoder: ['cls.predictions.bias', 'cls.predictions.transform.dense.weight', 'cls.predictions.transform.dense.bias', 'cls.predictions.decoder.weight', 'cls.seq_relationship.weight', 'cls.seq_relationship.bias', 'cls.predictions.transform.LayerNorm.weight', 'cls.predictions.transform.LayerNorm.bias']
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 2,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 2,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 5,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 3,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+loading vocabulary file /home/tuh17884/codes/KernelGAT/bert_base/vocab.txt
+loading archive file /home/tuh17884/codes/KernelGAT/bert_base
+Model config {
+  "attention_probs_dropout_prob": 0.1,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "max_position_embeddings": 512,
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "type_vocab_size": 2,
+  "vocab_size": 28996
+}
+
+Weights from pretrained model not used in BertForSequenceEncoder: ['cls.predictions.bias', 'cls.predictions.transform.dense.weight', 'cls.predictions.transform.dense.bias', 'cls.predictions.decoder.weight', 'cls.seq_relationship.weight', 'cls.seq_relationship.bias', 'cls.predictions.transform.LayerNorm.weight', 'cls.predictions.transform.LayerNorm.bias']
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 3,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Begin Attack
+('const confidence:', 10.0, 0.0)
+('const confidence lr:', 10.0, 0.0, 0.15)
+('tot:', 266)
+avg_seq_len: 0.6
+avg_diff: 0.1
+avg_diff_rate: 10.3%
+orig_correct: 100.0%
+adv_correct: 91.4%
+*targeted successful rate: 4.9%
+untargeted successful rate: 8.6%
+('tot:', 605)
+avg_seq_len: 0.6
+avg_diff: 0.1
+avg_diff_rate: 11.8%
+orig_correct: 100.0%
+adv_correct: 91.9%
+*targeted successful rate: 5.0%
+untargeted successful rate: 8.1%
+('const confidence:', 10.0, 0.0)
+Start validation
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+['attack.py', '--function', 'cluster', '--const', '10', '--confidence', '0', '--lr', '0.15', '--load', 'fever/bert-fever-uncased.pth', '--test-model', 'fever/bert-fever-uncased.pth', '--test-data', 'fever/test-data-cooked.pkl']
+orig acc：100.0%
+attack success：30.0
+orig pred success：605.0
+success rate：5.0%
+change rate: 11.8%
+original ppl: 64.8
+adv ppl: 93.9
+bert score: 0.738
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 3,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 3,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 3,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 3,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 3,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-config.json from cache at /home/tuh17884/.cache/torch/pytorch_transformers/4dad0251492946e18ac39290fcfe91b89d370fee250efe9521476438fe8ca185.7156163d5fdc189c3016baca0775ffce230789d7fa2a42ef516483e4ca884517
+Model config {
+  "architectures": [
+    "BertForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "num_labels": 3,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 0,
+  "pruned_heads": {},
+  "torchscript": false,
+  "type_vocab_size": 2,
+  "vocab_size": 30522
+}
+
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Begin Attack
+('const confidence:', 10.0, 0.0)
+('const confidence lr:', 10.0, 0.0, 0.15)
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-cased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/5e8a2b4893d13790ed4150ca1906be5f7a03d6c4ddf62296c383f6db42814db2.e13dbb970cb325137104fb2e5f36fe865f27746c6b526f6352861b1980eb80b1
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-cased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/5e8a2b4893d13790ed4150ca1906be5f7a03d6c4ddf62296c383f6db42814db2.e13dbb970cb325137104fb2e5f36fe865f27746c6b526f6352861b1980eb80b1
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-cased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/5e8a2b4893d13790ed4150ca1906be5f7a03d6c4ddf62296c383f6db42814db2.e13dbb970cb325137104fb2e5f36fe865f27746c6b526f6352861b1980eb80b1
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-cased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/5e8a2b4893d13790ed4150ca1906be5f7a03d6c4ddf62296c383f6db42814db2.e13dbb970cb325137104fb2e5f36fe865f27746c6b526f6352861b1980eb80b1
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-cased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/5e8a2b4893d13790ed4150ca1906be5f7a03d6c4ddf62296c383f6db42814db2.e13dbb970cb325137104fb2e5f36fe865f27746c6b526f6352861b1980eb80b1
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+Using bos_token, but it is not set yet.
+Using bos_token, but it is not set yet.
+Using eos_token, but it is not set yet.
+Using eos_token, but it is not set yet.
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-cased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/5e8a2b4893d13790ed4150ca1906be5f7a03d6c4ddf62296c383f6db42814db2.e13dbb970cb325137104fb2e5f36fe865f27746c6b526f6352861b1980eb80b1
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-cased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/5e8a2b4893d13790ed4150ca1906be5f7a03d6c4ddf62296c383f6db42814db2.e13dbb970cb325137104fb2e5f36fe865f27746c6b526f6352861b1980eb80b1
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-cased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/5e8a2b4893d13790ed4150ca1906be5f7a03d6c4ddf62296c383f6db42814db2.e13dbb970cb325137104fb2e5f36fe865f27746c6b526f6352861b1980eb80b1
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-cased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/5e8a2b4893d13790ed4150ca1906be5f7a03d6c4ddf62296c383f6db42814db2.e13dbb970cb325137104fb2e5f36fe865f27746c6b526f6352861b1980eb80b1
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-cased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/5e8a2b4893d13790ed4150ca1906be5f7a03d6c4ddf62296c383f6db42814db2.e13dbb970cb325137104fb2e5f36fe865f27746c6b526f6352861b1980eb80b1
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-cased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/5e8a2b4893d13790ed4150ca1906be5f7a03d6c4ddf62296c383f6db42814db2.e13dbb970cb325137104fb2e5f36fe865f27746c6b526f6352861b1980eb80b1
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-cased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/5e8a2b4893d13790ed4150ca1906be5f7a03d6c4ddf62296c383f6db42814db2.e13dbb970cb325137104fb2e5f36fe865f27746c6b526f6352861b1980eb80b1
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .
+Start attack
+loading file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-cased-vocab.txt from cache at /home/tuh17884/.cache/torch/pytorch_transformers/5e8a2b4893d13790ed4150ca1906be5f7a03d6c4ddf62296c383f6db42814db2.e13dbb970cb325137104fb2e5f36fe865f27746c6b526f6352861b1980eb80b1

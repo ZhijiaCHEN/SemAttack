@@ -177,7 +177,29 @@ def get_args():
                         help='use l1 norm')
     parser.add_argument('--temp', default=1e-1, type=float,
                         help='softmax temparature')
-
+    
+    parser.add_argument('--save-path', default='model.pth', type=str,
+                        help='model save path')
+    
+    parser.add_argument('--test_path', help='train path')
+    parser.add_argument('--name', help='train path')
+    parser.add_argument('--test_origin_path', help='train path')
+    parser.add_argument("--batch_size", default=4, type=int, help="Total batch size for training.")
+    parser.add_argument('--bert_pretrain')
+    parser.add_argument('--checkpoint')
+    parser.add_argument("--bert_hidden_dim", default=768, type=int, help="Total batch size for training.")
+    parser.add_argument("--layer", type=int, default=1, help='Graph Layer.')
+    parser.add_argument("--num_labels", type=int, default=3)
+    parser.add_argument("--kernel", type=int, default=21, help='Evidence num.')
+    parser.add_argument("--evi_num", type=int, default=5, help='Evidence num.')
+    parser.add_argument("--threshold", type=float, default=0.0, help='Evidence num.')
+    parser.add_argument("--max_len", default=130, type=int,
+                        help="The maximum total input sequence length after WordPiece tokenization. Sequences "
+                             "longer than this will be truncated, and sequences shorter than this will be padded.")
+    parser.add_argument('--fever', type=str,
+                        help='path to fever dataset')
+    parser.add_argument('--sample', type=int, default=-1)
+    
     return parser.parse_args()
 
 
