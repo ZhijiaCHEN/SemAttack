@@ -9,11 +9,6 @@ from torch.utils.data import DataLoader
 from attack_KernelGAT import load_KernelGAT
 from models import Pretrained_Fever_BERT
 
-def load_bert(state_dict, device):
-    model = Pretrained_Fever_BERT(state_dict)
-    model.to(device)
-    model.eval()
-    return model
 
 # def generate_embdding(tokenizer, model, data):
 #     word_to_embeddings = {}
@@ -78,32 +73,15 @@ def generate_embdding(tokenizer, model, data):
         word_list.extend([word] * len(word_to_embeddings[word]))
     word_embedding = torch.stack(word_embedding)
     # joblib.dump(data, "fever_data.pkl")
-    joblib.dump(word_list, '/'.join(args.fever.split('/')[:-1]) + f"/word-list-{args.model.split('/')[-1].split('.')[0]}.pkl")
-    torch.save(word_embedding, '/'.join(args.fever.split('/')[:-1]) + f"/word-embedding-{args.model.split('/')[-1].split('.')[0]}.pt")
-
-# def load_fever():
-#     data = joblib.load(args.train_data) + joblib.load(args.test_data)
-#     return [x["text"] for x in data]
+    joblib.dump(word_list, '/'.join(args.test_data.split('/')[:-1]) + f"/word-list-{args.model_name}.pkl")
+    torch.save(word_embedding, '/'.join(args.test_data.split('/')[:-1]) + f"/word-embedding-{args.model_name}.pt")
 
 def load_fever():
     data = []
-    with open(args.fever, encoding='utf-8') as f:
+    with open(args.test_data, encoding='utf-8') as f:
         for l in f.readlines():
             x = json.loads(l)
-            text = [x["claim"]]
-            for s in x['evidence']:
-                if type(s) == str:
-                    text.append(s)
-            x['text'] = ' '.join(text)
-            data.append(x)
-    return data
-
-def concate_claim_evidence():
-    with open(args.fever, encoding='utf-8') as f:
-        for l in f.readlines():
-            x = json.loads(l)
-
-            data.append(x["claim"])
+            data.append(x['claim'])
     return data
 
 if __name__ == "__main__":
@@ -111,7 +89,12 @@ if __name__ == "__main__":
     #generate_embdding()
     tokenizer = BertTokenizer.from_pretrained("bert-base-cased")
     device = torch.device("cuda")
-    # model = load_KernelGAT(args.model, device)
-    model = load_bert(torch.load(args.model), device)
+    model_states = torch.load(args.model_states)
+    if args.model_name == 'bert':
+        model = Pretrained_Fever_BERT(model_states)
+    elif args.model_name == 'kgat':
+        model = load_KernelGAT(model_states)
+    model = model.to(device)
+    model.eval()
     data = load_fever()
     generate_embdding(tokenizer, model, data)

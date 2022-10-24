@@ -12,7 +12,7 @@ from collections import Counter
 
 class YelpDataset(Dataset):
     def __init__(self, path):
-        cache_path = path + '.FC-cache.FT-cache'
+        cache_path = f"{path}.{args.model_name}" + '.FC-cache.FT-cache'
         save_path = '.'.join(path.split('.')[:-1]) + '-cooked.pkl'
         self.data = joblib.load(cache_path)
         knowledge_data = []

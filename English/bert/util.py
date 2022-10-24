@@ -8,7 +8,7 @@ import random
 import sys
 
 import numpy as np
-import torch
+import torch, joblib, json
 
 
 class Dictionary(object):
@@ -196,11 +196,12 @@ def get_args():
     parser.add_argument("--max_len", default=130, type=int,
                         help="The maximum total input sequence length after WordPiece tokenization. Sequences "
                              "longer than this will be truncated, and sequences shorter than this will be padded.")
-    parser.add_argument('--fever', type=str,
-                        help='path to fever dataset')
+                             
     parser.add_argument('--sample', type=int, default=-1)
-    
-    return parser.parse_args()
+    parser.add_argument('--model-states', type=str, help='Model states dictionary.')
+    parser.add_argument('--model-name', type=str, default='bert', choices=['bert', 'kgat'], help='Name of the model to be attacked.')
+
+    # return parser.parse_args()
 
 
 def make_sure_path_exists(path):
@@ -211,7 +212,36 @@ def make_sure_path_exists(path):
             raise
 
 
-args = get_args()
+# args = get_args()
+
+class ARGS:
+    scale = 1
+    const = 1e4
+    confidence = 0
+    debugging = True
+    untargeted=True
+    strategy=0
+    function='all'
+    batch_size = 1
+    sample = 100
+    test_data = 'fever/kgat-attack-data.pkl'
+    model_name = 'kgat'
+    attack_model = 'kgat'
+    seed = 1111
+    cuda = True
+    bert_pretrain = '/home/tuh17884/codes/KernelGAT/bert_base'
+    model_states = '/home/tuh17884/codes/KernelGAT/checkpoint/kgat/model.best.pt'
+    bert_hidden_dim = 768
+    dropout = 0.5
+    max_len = 130
+    num_labels = 3
+    evi_num = 5
+    layer = 1
+    kernel = 21
+    threshold = 0
+    l1 = False
+args = ARGS()
+root_dir = 'kgat-results'
 if args.untargeted:
     root_dir = os.path.join('./results', args.attack_model, args.function, 'untargeted')
 else:
@@ -241,7 +271,23 @@ def set_seed(args):
     if args.cuda:
         torch.cuda.manual_seed_all(args.seed)
 
-
+def load_data(path):
+    suffix = path.split('.')[-1]
+    if suffix == 'pkl':
+        data = joblib.load(path)
+    elif suffix == 'json':
+        with open(path, encoding='utf-8') as f:
+            data = json.loads(f.read())
+    elif suffix == 'jsonl':
+        data = []
+        with open(path, encoding='utf-8') as f:
+            for l in f.readlines():
+                x = json.loads(l)
+                data.append(x)
+    else:
+        raise Exception(f"{suffix} is unrecognized file type.")
+    return data
+        
 logger = init_logger()
 
 PAD = 0

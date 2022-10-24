@@ -97,7 +97,7 @@ class CarliniL2:
                     # print(self.wv[self.seq[0][j].item()])
                     # if self.seq[0][j].item() not in self.wv.keys():
 
-                    similar_wv = model.bert.embeddings.word_embeddings(torch.LongTensor(self.wv[self.seq[i][j].item()]).cuda())
+                    similar_wv = model.pred_model.bert.embeddings.word_embeddings(torch.LongTensor(self.wv[self.seq[i][j].item()]).cuda())
                     new_placeholder = input_adv[i, j].data
                     temp_place = new_placeholder.expand_as(similar_wv)
                     new_dist = torch.norm(temp_place - similar_wv.data, 2, -1)  # 2范数距离，一个字一个float

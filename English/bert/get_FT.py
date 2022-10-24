@@ -11,7 +11,8 @@ from pytorch_transformers import BertTokenizer, BertModel, BertForMaskedLM
 
 class YelpDataset(Dataset):
     def __init__(self, path):
-        cache_path = path + '.FC-cache'
+        
+        cache_path = f"{path}.{args.model_name}.FC-cache"
         save_path = cache_path + '.FT-cache'
         self.data = joblib.load(cache_path)
         bug_data = []

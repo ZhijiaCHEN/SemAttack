@@ -1,10 +1,10 @@
-import joblib
+import joblib, json
 import os
 import torch
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
-from util import logger, root_dir, args
+from util import logger, root_dir, args, load_data
 from transformers import BertTokenizer
 
 from collections import Counter
@@ -16,10 +16,10 @@ from models import Pretrained_Fever_BERT
 #         cache_path = path + '.FC-cache'
 #         self.max_len = 128
 #         if os.path.exists(cache_path):
-#             self.data = joblib.load(cache_path)
+#             self.data = load_data(cache_path)
 #         else:
 #             tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-#             self.data = joblib.load(path)
+#             self.data = load_data(path)
 #             clustered_data = []
 #             for i, data in enumerate(tqdm(self.data)):
 #                 data['seq'] = tokenizer.encode(('[CLS] ' + data['text']))
@@ -60,9 +60,9 @@ def filter_words(words, neighbors):
 def get_similar_dict(indexed_tokens, cluster_model, tokenizer):
     similar_char_dict = {}
     token_tensor = torch.tensor([indexed_tokens]).to(device)
-    #mask_tensor = torch.tensor([[1] * len(indexed_tokens)]).to(device)
+    mask_tensor = torch.tensor([[1] * len(indexed_tokens)]).to(device)
     with torch.no_grad():
-        encoded_layers, _ = cluster_model(token_tensor, None, None)
+        encoded_layers, _ = cluster_model(token_tensor, attention_mask=mask_tensor, token_type_ids=None)
     tokenized_words = [tokenizer._convert_id_to_token(x) for x in indexed_tokens]
     for i in range(1, len(indexed_tokens)):
         if tokenized_words[i] in word_list:
@@ -78,7 +78,7 @@ def get_similar_dict(indexed_tokens, cluster_model, tokenizer):
     return similar_char_dict
 
 def process_data(data, text_key, cluster_model, tokenizer, max_len):
-    cache_path = args.test_data + f'{cluster_model}' + '.FC-cache'
+    cache_path = f"{args.test_data}.{args.model_name}.FC-cache"
     clustered_data = []
     for i, data in enumerate(tqdm(data)):
         data['seq'] = tokenizer.encode(data[text_key], add_special_tokens=True)
@@ -92,24 +92,31 @@ def process_data(data, text_key, cluster_model, tokenizer, max_len):
     joblib.dump(clustered_data, cache_path)
 
 def process_BERT():
-    state_dict = torch.load(args.bert_pretrain)
+    state_dict = torch.load(args.model_states)
     model = Pretrained_Fever_BERT(state_dict)
     model.eval()
     model = model.to(device)
-    max_len = 130
+    max_len = 512
     tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
-    data = joblib.load(args.test_data)
-    process_data(data, 'claim', model, tokenizer, max_len)
+    data = load_data(args.test_data)
+    process_data(data, 'claim', model.pred_model, tokenizer, max_len)
 
 def process_KernelGAT():
-    model = load_KernelGAT(device)
+    state_dict = torch.load(args.model_states)
+    model = load_KernelGAT(state_dict)
+    model.eval()
+    model = model.to(device)
     tokenizer = BertTokenizer.from_pretrained("bert-base-cased")
-    data = joblib.load(args.test_data)
+    data = load_data(args.test_data)
     max_len = 130
     process_data(data, 'claim', model.pred_model, tokenizer, max_len)
 
 if __name__ == '__main__':
     embedding_space = torch.load(args.embedding_data)
-    word_list = joblib.load(args.word_list)
-    process_BERT()
+    word_list = load_data(args.word_list)
+    #
+    if args.model_name == 'bert':
+        process_BERT()
+    elif args.model_name == 'kgat':
+        process_KernelGAT()
 

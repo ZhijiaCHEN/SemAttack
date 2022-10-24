@@ -5,10 +5,10 @@ label_dict = {'NOT ENOUGH INFO': 0, 'SUPPORTS': 1, 'REFUTES': 2}
 def concate_claim_evidence(data):
     print("Concatenating...")
     for x in tqdm(data):
-        text = []
+        text = [x['claim']]
         for s in x['evidence']:
             text.append(s[2])
-        x['support'] = ' '.join(text)
+        x['text'] = ' '.join(text)
         x['label'] = label_dict[x['label'].upper()]
     return data
 
