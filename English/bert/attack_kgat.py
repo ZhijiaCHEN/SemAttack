@@ -24,7 +24,7 @@ from models import BertForSequenceEncoder
 from models import BertForSequenceClassification
 import json
 from models import inference_model
-from KernelGAT_data_loader import KGAT_Dataset
+from KernelGAT_data_loader import KGAT_Dataset, DataLoaderTest
 
 # %%
 class BERT_Dataset(Dataset):
@@ -188,189 +188,6 @@ def get_bug_dict(input_bug_dict, input_ids):
 
     return bug_dict, unk_words_dict
 
-
-#%%
-def collate_batch(batch):
-    ret = {k:[] for k in batch[0]}
-    for sample in batch:
-        for k,v in sample.items():
-            if k in ['label', 'seq', 'seq_len']:
-                ret[k].append(torch.tensor(v))
-            else:
-                ret[k].append(v)
-    for k in ['label', 'seq', 'seq_len']:
-        ret[k] = torch.stack(ret[k])
-    return ret
-
-def cw_word_attack(data_val, model):
-    logger.info("Begin Attack")
-    logger.info(("const confidence:", args.const, args.confidence))
-
-    adv_correct = 0
-    targeted_success = 0
-    untargeted_success = 0
-    orig_correct = 0
-    tot = 0
-    tot_diff = 0
-    tot_len = 0
-    adv_pickle = []
-    
-    test_batch = DataLoader(data_val, batch_size=args.batch_size, shuffle=False)
-    cw = CarliniL2(debug=args.debugging, targeted=not args.untargeted, cuda=True)
-    for batch_index, batch in enumerate(tqdm(test_batch)):
-        batch_add_start = batch['attack_start']
-        batch_add_end = batch['attack_end']
-
-        data = batch['seq'] = torch.stack(batch['seq']).t().to(device)
-        seq_len = batch['seq_len'] = batch['seq_len'].to(device)
-        if args.untargeted:
-            attack_targets = batch['label']
-        else:
-            if args.strategy == 0:
-                if batch['label'][0] == 1:
-                    attack_targets = torch.full_like(batch['label'], 0)
-                else:
-                    attack_targets = torch.full_like(batch['label'], 1)
-            elif args.strategy == 1:
-                if batch['label'][0] < 2:
-                    attack_targets = torch.full_like(batch['label'], 2)
-                else:
-                    attack_targets = torch.full_like(batch['label'], 0)
-        label = batch['label'] = batch['label'].to(device)
-        attack_targets = attack_targets.to(device)
-
-        # test original acc
-        out = model(batch['kgat input'])
-        prediction = torch.max(out, 1)[1]
-        ori_prediction = prediction
-        if ori_prediction[0].item() != label[0].item():
-            continue
-        batch['orig_correct'] = torch.sum((prediction == label).float())
-
-        # prepare attack
-        input_embedding = model.pred_model.bert.embeddings.word_embeddings(data)
-        cw_mask = np.zeros(input_embedding.shape).astype(np.float32)
-        cw_mask = torch.from_numpy(cw_mask).float().to(device)
-        for i, seq in enumerate(batch['seq_len']):
-            cw_mask[i][1:seq] = 1
-
-        if args.function == 'all':
-            cluster_char_dict = get_similar_dict(batch['similar_dict'])
-            bug_char_dict, unk_words_dict = get_bug_dict(batch['bug_dict'], batch['seq'][0])
-            similar_char_dict = get_knowledge_dict(batch['knowledge_dict'])
-
-            for k, v in cluster_char_dict.items():
-                synset = list(set(v + similar_char_dict[k]))
-                while 100 in synset:
-                    synset.remove(100)
-                if len(synset) >= 1:
-                    similar_char_dict[k] = synset
-                else:
-                    similar_char_dict[k] = [k]
-
-            for k, v in bug_char_dict.items():
-                synset = list(set(v + similar_char_dict[k]))
-                # while 100 in synset:
-                #     synset.remove(100)
-                if len(synset) >= 1:
-                    similar_char_dict[k] = synset
-                else:
-                    similar_char_dict[k] = [k]
-
-            all_dict = similar_char_dict
-        elif args.function == 'typo':
-            all_dict, unk_words_dict = get_bug_dict(batch['bug_dict'], batch['seq'][0])
-        elif args.function == 'knowledge':
-            all_dict = get_knowledge_dict(batch['knowledge_dict'])
-            unk_words_dict = None
-        elif args.function == 'cluster':
-            all_dict = get_similar_dict(batch['similar_dict'])
-            unk_words_dict = None
-        else:
-            raise Exception('Unknown perturbation function.')
-
-        cw.wv = all_dict
-        cw.mask = cw_mask
-        cw.seq = data
-        cw.batch_info = batch
-        cw.seq_len = seq_len
-
-        # attack
-        adv_data = cw.run(model, input_embedding, attack_targets)
-        # retest
-        adv_seq = torch.tensor(batch['seq']).to(device)
-        for bi, (add_start, add_end) in enumerate(zip(batch_add_start, batch_add_end)):
-            if bi in cw.o_best_sent:
-                for i in range(add_start, add_end):
-                    adv_seq.data[bi, i] = all_dict[adv_seq.data[bi, i].item()][cw.o_best_sent[bi][i - add_start]]
-
-        out = model(kgat_inputs)['pred']
-        prediction = torch.max(out, 1)[1]
-        orig_correct += batch['orig_correct'].item()
-        adv_correct += torch.sum((prediction == label).float()).item()
-        targeted_success += torch.sum((prediction == attack_targets).float()).item()
-        untargeted_success += torch.sum((prediction != label).float()).item()
-        tot += len(batch['label'])
-
-        for i in range(len(batch['label'])):
-            diff = difference(adv_seq[i], data[i])
-            adv_pickle.append({
-                'index': batch_index,
-                'adv_text': transform(adv_seq[i], unk_words_dict),
-                'orig_text': transform(batch['seq'][i]),
-                'raw_text': batch['claim'][i],
-                'label': label[i].item(),
-                'target': attack_targets[i].item(),
-                'ori_pred': ori_prediction[i].item(),
-                'pred': prediction[i].item(),
-                'diff': diff,
-                'orig_seq': batch['seq'][i].cpu().numpy().tolist(),
-                'adv_seq': adv_seq[i].cpu().numpy().tolist(),
-                'seq_len': batch['seq_len'][i].item()
-            })
-            # assert ori_prediction[i].item() == label[i].item()
-            if (args.untargeted and prediction[i].item() != label[i].item()) or (not args.untargeted and prediction[i].item() == attack_targets[i].item()):
-                tot_diff += diff
-                tot_len += batch['seq_len'][i].item()
-                if batch_index % 100 == 0:
-                    try:
-                        # logger.info(("label:", label[i].item()))
-                        # logger.info(("pred:", prediction[i].item()))
-                        # logger.info(("ori_pred:", ori_prediction[i].item()))
-                        # logger.info(("target:", attack_targets[i].item()))
-                        # logger.info(("orig:", transform(batch['seq'][i])))
-                        # logger.info(("adv:", transform(adv_seq[i], unk_words_dict)))
-                        # logger.info(("seq_len:", batch['seq_len'][i].item()))
-
-                        logger.info(("tot:", tot))
-                        logger.info(("avg_seq_len: {:.1f}".format(tot_len / tot)))
-                        logger.info(("avg_diff: {:.1f}".format(tot_diff / tot)))
-                        logger.info(("avg_diff_rate: {:.1f}%".format(tot_diff / tot_len * 100)))
-                        logger.info(("orig_correct: {:.1f}%".format(orig_correct / tot * 100)))
-                        logger.info(("adv_correct: {:.1f}%".format(adv_correct / tot * 100)))
-                        if args.untargeted:
-                            logger.info(("targeted successful rate: {:.1f}%".format(targeted_success / tot * 100)))
-                            logger.info(("*untargeted successful rate: {:.1f}%".format(untargeted_success / tot * 100)))
-                        else:
-                            logger.info(("*targeted successful rate: {:.1f}%".format(targeted_success / tot * 100)))
-                            logger.info(("untargeted successful rate: {:.1f}%".format(untargeted_success / tot * 100)))
-                    except:
-                        continue
-    joblib.dump(adv_pickle, os.path.join(root_dir, 'adv_text.pkl'))
-    logger.info(("tot:", tot))
-    logger.info(("avg_seq_len: {:.1f}".format(tot_len / tot)))
-    logger.info(("avg_diff: {:.1f}".format(tot_diff / tot)))
-    logger.info(("avg_diff_rate: {:.1f}%".format(tot_diff / tot_len * 100)))
-    logger.info(("orig_correct: {:.1f}%".format(orig_correct / len(data_val) * 100)))
-    logger.info(("adv_correct: {:.1f}%".format(adv_correct / tot * 100)))
-    if args.untargeted:
-        logger.info(("targeted successful rate: {:.1f}%".format(targeted_success / tot * 100)))
-        logger.info(("*untargeted successful rate: {:.1f}%".format(untargeted_success / tot * 100)))
-    else:
-        logger.info(("*targeted successful rate: {:.1f}%".format(targeted_success / tot * 100)))
-        logger.info(("untargeted successful rate: {:.1f}%".format(untargeted_success / tot * 100)))
-    logger.info(("const confidence:", args.const, args.confidence))
-
 #%%
 def check_consistency():
     logger.info("Start checking consistency")
@@ -474,26 +291,50 @@ def validate(model):
     logger.info('adv ppl: {:.1f}'.format(adv_ppl))
     logger.info('bert score: {:.3f}'.format(bs))
 
+# %%
 def check_model(model, data_val):
     model.eval()
     device = next(model.parameters()).device
-    # test_batch = DataLoader(data_val, batch_size=args.batch_size, shuffle=False)
+    test_batch = DataLoader(data_val, batch_size=args.batch_size, shuffle=False)
     correct = mistake = 0
-    for batch_index, data in enumerate(tqdm(data_val)):
-        kgat_inputs, batch, label, ids = data
-        logits = model(kgat_inputs)
-        # batch['seq'] = torch.stack(batch['seq']).t().to(device)
-        # batch['seq'][0][batch['seq_len']] = 102
-        # batch['seq_len'] += 1
-        # batch['seq'] = batch['seq'].to(device)
-        # batch['seq_len'] = batch['seq_len'].to(device)
-        # label = batch['label'].to(device)
+    for batch_index, batch in enumerate(tqdm(test_batch)):
+        #kgat_inputs, batch, label, ids = data
+        input, mask, segment = batch['kgat input']
+        inp_tensor = torch.tensor(input).to(device)
+        msk_tensor = torch.tensor(mask).to(device)
+        seg_tensor = torch.tensor(segment).to(device)
+        
+        logits = model(inp_tensor, msk_tensor, seg_tensor)
+        #logits = model((inp_tensor, msk_tensor, seg_tensor))
         # test original acc
-        # out = model(batch['seq'], batch['seq_len'])['pred']
+
         prediction = torch.max(logits, 1)[1]
         ori_prediction = prediction
         # print(f"label={label[0].item()}, predict={ori_prediction[0].item()}")
-        if ori_prediction[0].item() != label[0]:
+        if ori_prediction[0].item() != batch['label'][0]:
+            #continue
+            mistake += 1
+        else:
+            correct += 1
+        # batch['orig_correct'] = torch.sum((prediction == label).float())
+    acc = correct/(correct + mistake)
+    print(f"{correct=}, {mistake=}, {acc=}")
+
+def check_model2(model, test_batch):
+    model.eval()
+    device = next(model.parameters()).device
+    correct = mistake = 0
+    for batch_index, batch in enumerate(tqdm(test_batch)):
+        #kgat_inputs, batch, label, ids = data
+        inputs, labels, ids = batch
+        #logits = model(inp_tensor, msk_tensor, seg_tensor)
+        logits = model(inputs)
+        # test original acc
+
+        prediction = torch.max(logits, 1)[1]
+        ori_prediction = prediction
+        # print(f"label={label[0].item()}, predict={ori_prediction[0].item()}")
+        if ori_prediction[0].item() != labels[0]:
             #continue
             mistake += 1
         else:
@@ -504,10 +345,8 @@ def check_model(model, data_val):
 
 def load_KernelGAT(state_dict):
     bert_model = BertForSequenceEncoder.from_pretrained(args.bert_pretrain)
-    # bert_model = bert_model.cuda()
-    # bert_model.eval()
     model = inference_model(bert_model, args)
-    # model.load_state_dict(state_dict['model'])
+    model.load_state_dict(state_dict['model'])
     return model
 
 #%%
@@ -521,23 +360,25 @@ random.seed(args.seed)
 
 tokenizer = BertTokenizer.from_pretrained("bert-base-cased")
 device = torch.device("cuda")
-model_states = torch.load(args.model_states)
+#
 if args.model_name == 'bert':
     # model = models.Pretrained_Fever_BERT(model_states)
     model = BertForSequenceClassification.from_pretrained("bert-base-cased", num_labels=3)
-    model_states.pop('bert.embeddings.position_ids')
-    model.load_state_dict(model_states)
+    #model_states.pop('bert.embeddings.position_ids')
+    #model.load_state_dict(model_states)
     
     test_data = BERT_Dataset(args.test_data, args.sample)
 elif args.model_name == 'kgat':
     label_map = {'SUPPORTS': 0, 'REFUTES': 1, 'NOT ENOUGH INFO': 2}
-    test_data = KGAT_Dataset(args.test_data, label_map, tokenizer, sample = args.sample)
-    
-    model = load_KernelGAT(model_states)
-model = model.to(device)
-model.eval()
-    
-    # check_model(model, test_data)
+    test_data = KGAT_Dataset(args.test_data, label_map, tokenizer, sampleCnt = args.sample)
+    # test_data2 = DataLoaderTest(args.test_data, label_map=label_map, tokenizer=tokenizer, args=args, batch_size=1)
+    model_states = torch.load(args.model_states)
+    model = load_KernelGAT(model_states).to(device)
+# model.eval()
+
+# %%
+check_model(model, test_data)
+
 
 #%%
 args.lr = 0.1
@@ -546,6 +387,7 @@ args.debug_cw = True
 args.clip = 0.5
 args.decreasing_temp = False
 args.temp = 1e-1
+args.sample = 1000
 # cw_word_attack(test_data, model)
 # validate(model)
 
@@ -663,14 +505,14 @@ class CarliniL2:
                 print("output:", batch_adv_sent)
                 print("input_adv:", input_adv)
                 print("output:", output)
-                adv_seq_part = torch.tensor(self.claim_seq)
+                adv_claim_seq = torch.tensor(self.claim_seq)
                 for bi, (add_start, add_end) in enumerate(zip(self.batch_info['attack_start'], self.batch_info['attack_end'])):
-                    adv_seq_part.data[bi, add_start:add_end] = torch.LongTensor(batch_adv_sent)
-                print("out:", adv_seq_part)
-                print("out embedding:", model.pred_model.bert.embeddings.word_embeddings(adv_seq_part))
+                    adv_claim_seq.data[bi, add_start:add_end] = torch.LongTensor(batch_adv_sent)
+                print("out:", adv_claim_seq)
+                print("out embedding:", model.pred_model.bert.embeddings.word_embeddings(adv_claim_seq))
                 
                 adv_seq = self.kgat_inputs.clone()
-                adv_seq[:, :self.seq_len] = adv_seq_part.repeat(args.evi_num, 1)
+                adv_seq[:, :self.seq_len] = adv_claim_seq.repeat(args.evi_num, 1)
                 out = model(adv_seq, self.kgat_mask, self.kgat_segment)
                 print("out:", out)
 
@@ -861,7 +703,7 @@ tot_len = 0
 adv_pickle = []
 
 test_batch = DataLoader(test_data, batch_size=args.batch_size, shuffle=False)
-cw = CarliniL2(debug=args.debugging, targeted=not args.untargeted, cuda=True)
+cw = CarliniL2(debug=False, targeted=not args.untargeted, cuda=True)
 for batch_index, batch in enumerate(tqdm(test_batch)):
     batch_add_start = batch['attack_start']
     batch_add_end = batch['attack_end']
@@ -937,7 +779,6 @@ for batch_index, batch in enumerate(tqdm(test_batch)):
         unk_words_dict = None
     else:
         raise Exception('Unknown perturbation function.')
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     cw.wv = all_dict
     cw.mask = cw_mask
     cw.claim_seq = data
@@ -950,14 +791,14 @@ for batch_index, batch in enumerate(tqdm(test_batch)):
     # attack
     adv_data = cw.run(model, input_embedding, attack_targets)
     # retest
-    adv_seq_part = torch.tensor(batch['seq']).to(device)
+    adv_claim_seq = torch.tensor(batch['seq']).to(device)
     for bi, (add_start, add_end) in enumerate(zip(batch_add_start, batch_add_end)):
         if bi in cw.o_best_sent:
             for i in range(add_start, add_end):
-                adv_seq_part.data[bi, i] = all_dict[adv_seq_part.data[bi, i].item()][cw.o_best_sent[bi][i - add_start]]
+                adv_claim_seq.data[bi, i] = all_dict[adv_claim_seq.data[bi, i].item()][cw.o_best_sent[bi][i - add_start]]
 
     adv_seq = inp_tensor.clone()
-    adv_seq[:, seq_len, :] = adv_seq_part
+    adv_seq[:, :seq_len] = adv_claim_seq.repeat(args.evi_num, 1)
     out = model(adv_seq, msk_tensor, seg_tensor)
     prediction = torch.max(out, 1)[1]
     orig_correct += batch['orig_correct'].item()
@@ -967,10 +808,10 @@ for batch_index, batch in enumerate(tqdm(test_batch)):
     tot += len(batch['label'])
 
     for i in range(len(batch['label'])):
-        diff = difference(adv_seq[i], data[i])
+        diff = difference(adv_claim_seq[i], data[i])
         adv_pickle.append({
             'index': batch_index,
-            'adv_text': transform(adv_seq[i], unk_words_dict),
+            'adv_text': transform(adv_claim_seq[i], unk_words_dict),
             'orig_text': transform(batch['seq'][i]),
             'raw_text': batch['claim'][i],
             'label': label[i].item(),
@@ -979,7 +820,7 @@ for batch_index, batch in enumerate(tqdm(test_batch)):
             'pred': prediction[i].item(),
             'diff': diff,
             'orig_seq': batch['seq'][i].cpu().numpy().tolist(),
-            'adv_seq': adv_seq[i].cpu().numpy().tolist(),
+            'adv_seq': adv_claim_seq[i].cpu().numpy().tolist(),
             'seq_len': batch['seq_len'][i].item()
         })
         # assert ori_prediction[i].item() == label[i].item()

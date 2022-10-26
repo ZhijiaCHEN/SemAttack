@@ -497,10 +497,10 @@ def check_model(model, data_val):
     test_batch = DataLoader(data_val, batch_size=args.batch_size, shuffle=False)
     correct = mistake = 0
     for batch_index, batch in enumerate(tqdm(test_batch)):
+        # batch['seq'] = torch.stack(batch['seq']).t().to(device)
+        # batch['seq'][0][batch['seq_len']] = 102
+        # batch['seq_len'] += 1
         batch['seq'] = torch.stack(batch['seq']).t().to(device)
-        batch['seq'][0][batch['seq_len']] = 102
-        batch['seq_len'] += 1
-        batch['seq'] = batch['seq'].to(device)
         batch['seq_len'] = batch['seq_len'].to(device)
         label = batch['label'] = batch['label'].to(device)
         # test original acc
@@ -562,6 +562,6 @@ if __name__ == '__main__':
 
     tokenizer = BertTokenizer.from_pretrained("bert-base-cased")
     
-    # check_model(model, test_data)
-    cw_word_attack(test_data, model)
-    validate(model)
+    check_model(model, test_data)
+    # cw_word_attack(test_data, model)
+    # validate(model)
