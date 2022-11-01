@@ -75,7 +75,7 @@
             }
         },
         {
-            "name": "precess data",
+            "name": "process data",
             "type": "python",
             "request": "launch",
             "program": "${file}",
@@ -83,14 +83,16 @@
             "justMyCode": false,
             "cwd": "${workspaceFolder}/English/bert",
             "args": [
-                "--test-data=/home/tuh17884/codes/KernelGAT/data/bert_eval.pkl", 
-                "--embedding-data=/home/tuh17884/codes/KernelGAT/data/word-embedding-bert_eval.pt",
-                "--word-list=/home/tuh17884/codes/KernelGAT/data/word-list-bert_eval.pkl",
+                "--test-data=fever/new-bert_test.jsonl", 
+                "--embedding-data=fever/word-embedding-bert-fever-claim-evidence-cased.pt",
+                "--word-list=fever/word-list-bert-fever-claim-evidence-cased.pkl",
                 "--bert_pretrain=/home/tuh17884/codes/KernelGAT/bert_base",
-                "--checkpoint=/home/tuh17884/codes/KernelGAT/checkpoint/kgat/model.best.pt",
+                "--model-states=fever/bert-fever-claim-evidence-cased.pth",
+                // "--model-states=/home/tuh17884/codes/KernelGAT/checkpoint/kgat/model.best.pt",
+                // "--model-name=kgat",
             ],
             "env": {
-                "CUDA_VISIBLE_DEVICES": "3"
+                "CUDA_VISIBLE_DEVICES": "0"
             }
         },
         {
@@ -108,8 +110,9 @@
                 "--lr=0.15",
                 "--load=fever/bert-fever-cased.pth",
                 "--test-model=fever/bert-fever-cased.pth",
-                "--test-data=fever/fever-test-tokenized.pkl",
-                "--batch-size=1"
+                "--test-data=fever/kgat-cooked.pkl",
+                "--batch-size=1",
+                "--sample=1000"
             ],
             "env": {
                 "CUDA_VISIBLE_DEVICES": "0",
@@ -117,7 +120,7 @@
             }
         },
         {
-            "name": "attack KernelGAT-BERT",
+            "name": "attack kgat",
             "type": "python",
             "request": "launch",
             "program": "${file}",
@@ -125,17 +128,44 @@
             "justMyCode": false,
             "cwd": "${workspaceFolder}/English/bert",
             "args": [
-                "--function=cluster",
+                "--function=all",
                 "--const=10",
                 "--confidence=0",
                 "--lr=0.15",
-                "--test_path", "~/codes/KernelGAT/data/bert_eval.json",
-                "--bert_pretrain", "~/codes/KernelGAT/bert_base",
-                "--checkpoint", "~/codes/KernelGAT/checkpoint/kgat/model.best.pt",
+                "--test-data=fever/kgat-attack-data.pkl",
+                "--bert_pretrain", "/home/tuh17884/codes/KernelGAT/bert_base",
+                "--model-states", "/home/tuh17884/codes/KernelGAT/checkpoint/kgat/model.best.pt",
+                "--sample=500",
+                "--model-name=kgat",
+                "--batch-size=1"
 
             ],
             "env": {
                 "CUDA_VISIBLE_DEVICES": "0",
+                // "CUDA_LAUNCH_BLOCKING": "1"
+            }
+        },
+        {
+            "name": "attack bert",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}/English/bert",
+            "args": [
+                "--function=all",
+                "--const=10",
+                "--confidence=0",
+                "--lr=0.15",
+                "--test-data=fever/bert-attack-data.pkl",
+                "--model-states=fever/bert-fever-claim-evidence-cased.pth",
+                "--sample=1000",
+                "--model-name=bert",
+
+            ],
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "3",
                 // "CUDA_LAUNCH_BLOCKING": "1"
             }
         },

@@ -23,32 +23,32 @@ from models import BertForSequenceClassification
 import json
 from models import inference_model
 
-class YelpDataset(Dataset):
-    def __init__(self, path_or_raw, raw=False, max_len = 130):
-        self.raw = raw
-        self.max_len = max_len
-        if not self.raw:
-            self.data = joblib.load(path_or_raw)
-            # self.data = random.sample(joblib.load(path_or_raw), 1200)
-        else:
-            self.data = path_or_raw
-            tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
-            for data in self.data:
-                data['seq'] = tokenizer.encode(('[CLS] ' + data['adv_text']))
-                if len(data['seq']) > self.max_len:
-                    data['seq'] = data['seq'][:self.max_len]
+# class YelpDataset(Dataset):
+#     def __init__(self, path_or_raw, raw=False, max_len = 130):
+#         self.raw = raw
+#         self.max_len = max_len
+#         if not self.raw:
+#             self.data = joblib.load(path_or_raw)
+#             # self.data = random.sample(joblib.load(path_or_raw), 1200)
+#         else:
+#             self.data = path_or_raw
+#             tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
+#             for data in self.data:
+#                 data['seq'] = tokenizer.encode(('[CLS] ' + data['adv_text']))
+#                 if len(data['seq']) > self.max_len:
+#                     data['seq'] = data['seq'][:self.max_len]
 
-    def __len__(self):
-        if not self.raw:
-            return len(self.data) // args.scale
-        else:
-            return len(self.data)
+#     def __len__(self):
+#         if not self.raw:
+#             return len(self.data) // args.scale
+#         else:
+#             return len(self.data)
 
-    def __getitem__(self, index):
-        if not self.raw:
-            return self.data[index * args.scale]
-        else:
-            return self.data[index]
+#     def __getitem__(self, index):
+#         if not self.raw:
+#             return self.data[index * args.scale]
+#         else:
+#             return self.data[index]
 
 class BERT_Dataset(Dataset):
     def __init__(self, path, sample, max_len = 512):
@@ -99,7 +99,9 @@ def cal_bert_score(cands, refs, scorer):
     return f1.mean()
 
 
-def transform(seq, unk_words_dict=None):
+def transform(seq, unk_words_dict=None, claim_seq_len=None):
+    if claim_seq_len is None:
+        claim_seq_len = len(seq)
     if unk_words_dict is None:
         unk_words_dict = {}
     if not isinstance(seq, list):
@@ -113,7 +115,7 @@ def transform(seq, unk_words_dict=None):
     else:
         tokens = []
         for idx, x in enumerate(seq):
-            if x == 100 and len(unk_words_dict[idx]) != 0:
+            if x == 100 and idx < claim_seq_len and len(unk_words_dict[idx]) != 0:
                 unk_words = unk_words_dict[idx]
                 unk_word = random.choice(unk_words)
                 tokens.append(unk_word)
@@ -237,6 +239,7 @@ def cw_word_attack(data_val, model):
         #     batch['add_end'].append(l)
 
         data = batch['seq'] = torch.stack(batch['seq']).t().to(device)
+        batch['claim_seq'] = torch.stack(batch['claim_seq']).t().to(device)
         orig_sent = transform(batch['seq'][0])
 
         seq_len = batch['seq_len'] = batch['seq_len'].to(device)
@@ -273,7 +276,7 @@ def cw_word_attack(data_val, model):
 
         if args.function == 'all':
             cluster_char_dict = get_similar_dict(batch['similar_dict'])
-            bug_char_dict, unk_words_dict = get_bug_dict(batch['bug_dict'], batch['seq'][0])
+            bug_char_dict, unk_words_dict = get_bug_dict(batch['bug_dict'], batch['claim_seq'][0])
             similar_char_dict = get_knowledge_dict(batch['knowledge_dict'])
 
             for k, v in cluster_char_dict.items():
@@ -296,7 +299,7 @@ def cw_word_attack(data_val, model):
 
             all_dict = similar_char_dict
         elif args.function == 'typo':
-            all_dict, unk_words_dict = get_bug_dict(batch['bug_dict'], batch['seq'][0])
+            all_dict, unk_words_dict = get_bug_dict(batch['bug_dict'], batch['claim_seq'][0])
         elif args.function == 'knowledge':
             all_dict = get_knowledge_dict(batch['knowledge_dict'])
             unk_words_dict = None
@@ -331,9 +334,10 @@ def cw_word_attack(data_val, model):
 
         for i in range(len(batch['label'])):
             diff = difference(adv_seq[i], data[i])
+            claim_seq_len = batch_add_end[i]
             adv_pickle.append({
                 'index': batch_index,
-                'adv_text': transform(adv_seq[i], unk_words_dict),
+                'adv_text': transform(adv_seq[i], unk_words_dict, claim_seq_len=claim_seq_len),
                 'orig_text': transform(batch['seq'][i]),
                 'raw_text': batch['claim'][i],
                 'label': label[i].item(),
@@ -343,12 +347,13 @@ def cw_word_attack(data_val, model):
                 'diff': diff,
                 'orig_seq': batch['seq'][i].cpu().numpy().tolist(),
                 'adv_seq': adv_seq[i].cpu().numpy().tolist(),
-                'seq_len': batch['seq_len'][i].item()
+                'seq_len': batch['seq_len'][i].item(),
+                'claim_seq_len': claim_seq_len
             })
             # assert ori_prediction[i].item() == label[i].item()
             if (args.untargeted and prediction[i].item() != label[i].item()) or (not args.untargeted and prediction[i].item() == attack_targets[i].item()):
                 tot_diff += diff
-                tot_len += batch['seq_len'][i].item()
+                tot_len += claim_seq_len
                 if batch_index % 100 == 0:
                     try:
                         # logger.info(("label:", label[i].item()))
@@ -389,108 +394,6 @@ def cw_word_attack(data_val, model):
     logger.info(("const confidence:", args.const, args.confidence))
 
 
-def check_consistency():
-    logger.info("Start checking consistency")
-
-    adv_text = joblib.load(os.path.join(root_dir, 'adv_text.pkl'))
-    for i in adv_text:
-        i['adv_text'] = i['adv_text'].replace('[CLS] ', '')
-
-    adv_text = YelpDataset(adv_text, raw=True)
-    test_batch = DataLoader(adv_text, batch_size=args.batch_size, shuffle=False)
-
-    inconsistent = []
-    with torch.no_grad():
-        for bi, batch in enumerate(tqdm(test_batch)):
-            batch['seq'] = torch.stack(batch['seq']).t().to(device)
-            batch['seq_len'] = batch['seq_len'].to(device)
-            out = model(batch['seq'], batch['seq_len'])
-            logits = out['pred'].detach().cpu()
-            pred = logits.argmax(dim=-1)
-            if pred[0].item() != batch['pred'][0]:
-                inconsistent.append((bi, batch))
-
-    logger.info("Num of inconsistent: {}".format(len(inconsistent)))
-    if len(inconsistent) != 0:
-        joblib.dump(inconsistent, os.path.join(root_dir, 'inconsistent_adv.pkl'))
-
-    return adv_text
-
-
-def validate(model):
-    logger.info("Start validation")
-
-    adv_text = joblib.load(os.path.join(root_dir, 'adv_text.pkl'))
-    for i in adv_text:
-        i['adv_text'] = i['adv_text'].replace('[CLS] ', '')
-
-    adv_text_dataset = YelpDataset(adv_text, raw=True)
-    test_batch = DataLoader(adv_text_dataset, batch_size=args.batch_size, shuffle=False)
-
-    # states = torch.load(args.load, map_location=torch.device('cuda'))
-    # states['proj.weight'] = states.pop('classifier.weight')
-    # states['proj.bias'] = states.pop('classifier.bias')
-    # states.pop('bert.embeddings.position_ids')
-    
-    # test_model = models.BertC(dropout=args.dropout, num_class=3)
-    # test_model.load_state_dict(states)
-    # test_model = test_model.to(device)
-    # test_model.eval()
-    
-    with torch.no_grad():
-        for bi, batch in enumerate(tqdm(test_batch)):
-            batch['seq'] = torch.stack(batch['seq']).t().to(device)
-            batch['seq_len'] = batch['seq_len'].to(device)
-            out = model(batch['seq'], batch['seq_len'])
-            logits = out['pred'].detach().cpu()
-            pred = logits.argmax(dim=-1)
-            adv_text[bi]['pred_validated'] = pred[0].item()
-    del model
-    # del test_model
-    torch.cuda.empty_cache()
-    joblib.dump(adv_text, os.path.join(root_dir, 'adv_text_validated.pkl'))
-
-    acc = 0
-    origin_mistake = 0
-    total = 0
-    total_change = 0
-    total_word = 0
-    orig_text_eval = []
-    adv_text_eval = []
-    for item in tqdm(adv_text):
-        if item['ori_pred'] != item['label']:
-            origin_mistake += 1
-            continue
-        if args.untargeted and item['pred_validated'] != item['label'] or not args.untargeted and item['pred_validated'] == item['target']:
-            acc += 1
-            total_change += item['diff']
-            total_word += item['seq_len']
-            orig_text_eval.append(item['orig_text'].replace('[CLS]', '').strip())
-            adv_text_eval.append(item['adv_text'].replace('[CLS]', '').strip())
-        total += 1
-
-    model_id = 'gpt2-medium'
-    ppl_model = GPT2LMHeadModel.from_pretrained(model_id).to('cuda')
-    ppl_tokenizer = GPT2TokenizerFast.from_pretrained(model_id)
-    bs_scorer = BERTScorer(lang="en", rescale_with_baseline=True)
-    orig_ppl = cal_ppl(orig_text_eval, ppl_model, ppl_tokenizer)
-    adv_ppl = cal_ppl(adv_text_eval, ppl_model, ppl_tokenizer)
-    bs = cal_bert_score(adv_text_eval, orig_text_eval, bs_scorer)
-
-    suc = float(acc / total) * 100
-    change_rate = float(total_change / total_word) * 100
-    origin_acc = (1 - origin_mistake / len(adv_text)) * 100
-
-    logger.info(sys.argv)
-    logger.info('orig acc：{:.1f}%'.format(origin_acc))
-    logger.info('attack success：{:.1f}'.format(acc))
-    logger.info('orig pred success：{:.1f}'.format(total))
-    logger.info('success rate：{:.1f}%'.format(suc))
-    logger.info('change rate: {:.1f}%'.format(change_rate))
-    logger.info('original ppl: {:.1f}'.format(orig_ppl))
-    logger.info('adv ppl: {:.1f}'.format(adv_ppl))
-    logger.info('bert score: {:.3f}'.format(bs))
-
 def check_model(model, data_val):
     model.eval()
     device = next(model.parameters()).device
@@ -515,7 +418,7 @@ def check_model(model, data_val):
             correct += 1
         batch['orig_correct'] = torch.sum((prediction == label).float())
     acc = correct/(correct + mistake)
-    print(f"{correct=}, {mistake=}, {acc=}")
+    print(f"correct={correct}, mistake={mistake}, acc={acc}")
 
 def load_KernelGAT(state_dict):
     bert_model = BertForSequenceEncoder.from_pretrained(args.bert_pretrain)
@@ -558,10 +461,7 @@ if __name__ == '__main__':
     model = model.to(device)
     model.eval()
     
-    test_data = BERT_Dataset(args.test_data, args.sample)
-
-    tokenizer = BertTokenizer.from_pretrained("bert-base-cased")
-    
-    check_model(model, test_data)
-    # cw_word_attack(test_data, model)
+    test_data = BERT_Dataset(args.test_data, args.sample)    
+    #check_model(model, test_data)
+    cw_word_attack(test_data, model)
     # validate(model)

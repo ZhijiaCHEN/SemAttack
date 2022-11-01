@@ -201,7 +201,7 @@ def get_args():
     parser.add_argument('--model-states', type=str, help='Model states dictionary.')
     parser.add_argument('--model-name', type=str, default='bert', choices=['bert', 'kgat'], help='Name of the model to be attacked.')
 
-    # return parser.parse_args()
+    return parser.parse_args()
 
 
 def make_sure_path_exists(path):
@@ -212,7 +212,7 @@ def make_sure_path_exists(path):
             raise
 
 
-# args = get_args()
+
 
 class ARGS:
     scale = 1
@@ -225,7 +225,6 @@ class ARGS:
     batch_size = 1
     sample = 100
     test_data = 'fever/kgat-attack-data.pkl'
-    model_name = 'kgat'
     attack_model = 'kgat'
     seed = 1111
     cuda = True
@@ -240,8 +239,9 @@ class ARGS:
     kernel = 21
     threshold = 0
     l1 = False
-args = ARGS()
-root_dir = 'kgat-results'
+# args = ARGS()
+args = get_args()
+# root_dir = 'kgat-results'
 if args.untargeted:
     root_dir = os.path.join('./results', args.attack_model, args.function, 'untargeted')
 else:
