@@ -675,8 +675,4 @@ model.eval()
 # check_model(model, test_data)
 
 # %%
-for untargeted in [True]:
-    args.untargeted = untargeted
-    for function in ['typo', 'knowledge', 'cluster']:
-        args.function = function
-        cw_word_attack(model, test_data)
+cw_word_attack(model, test_data)
