@@ -1,4 +1,4 @@
-# %%
+#%%
 import json
 import random
 import codecs
@@ -6,20 +6,27 @@ import joblib
 import os
 import numpy as np
 import torch
+from torch import optim
+from util import logger, load_data, args
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
 from tqdm import tqdm
 from copy import deepcopy
-from torch import optim
-from util import logger, load_data, args
+import torch
+
+# from CW_attack_kgat import CarliniL2
+
 import models
-BertForSequenceClassification = models.BertForSequenceClassification
-inference_model = models.inference_model 
 from pytorch_transformers import BertTokenizer
+
 import sys
 from transformers import GPT2LMHeadModel, GPT2TokenizerFast
 from bert_score import BERTScorer
+from models import BertForSequenceEncoder
+from models import BertForSequenceClassification
 import json
+from models import inference_model
+from KernelGAT_data_loader import KGAT_Dataset, DataLoaderTest
 
 # %%
 class YelpDataset(Dataset):
@@ -47,6 +54,152 @@ class YelpDataset(Dataset):
             return self.data[index * args.scale]
         else:
             return self.data[index]
+
+# %%
+def cal_ppl(text, model, tokenizer):
+    assert isinstance(text, list)
+    encodings = tokenizer('\n\n'.join(text), return_tensors='pt')
+    max_length = 128 #model.config.n_positions
+    stride = 128
+    lls = []
+    for i in tqdm(range(0, encodings.input_ids.size(1), stride)):
+        begin_loc = max(i + stride - max_length, 0)
+        end_loc = min(i + stride, encodings.input_ids.size(1))
+        trg_len = end_loc - i  # may be different from stride on last loop
+        input_ids = encodings.input_ids[:, begin_loc:end_loc].to('cuda')
+        target_ids = input_ids.clone()
+        target_ids[:, :-trg_len] = -100
+
+        with torch.no_grad():
+            outputs = model(input_ids, labels=target_ids)
+            log_likelihood = outputs[0] * trg_len
+
+        lls.append(log_likelihood)
+
+    ppl = torch.exp(torch.stack(lls).sum() / end_loc).item()
+
+    return ppl
+
+
+def cal_bert_score(cands, refs, scorer):
+    _, _, f1 = scorer.score(cands, refs)
+    return f1.mean()
+
+
+def transform(seq, unk_words_dict=None):
+    if unk_words_dict is None:
+        unk_words_dict = {}
+    if not isinstance(seq, list):
+        seq = seq.squeeze().cpu().numpy().tolist()
+    unk_count = 0
+    for x in seq:
+        if x == 100:
+            unk_count += 1
+    if unk_count == 0 or len(unk_words_dict) == 0:
+        return tokenizer.convert_tokens_to_string([tokenizer._convert_id_to_token(x) for x in seq])
+    else:
+        tokens = []
+        for idx, x in enumerate(seq):
+            if x == 100 and len(unk_words_dict[idx]) != 0:
+                unk_words = unk_words_dict[idx]
+                unk_word = random.choice(unk_words)
+                tokens.append(unk_word)
+            else:
+                tokens.append(tokenizer._convert_id_to_token(x))
+        return tokenizer.convert_tokens_to_string(tokens)
+
+
+def difference(a, b):
+    tot = 0
+    for x, y in zip(a, b):
+        if x != y:
+            tot += 1
+
+    return tot
+
+
+def get_similar_dict(similar_dict):
+    similar_char_dict = {0: [0], 101: [101], 102: [102]}
+    for k, v in similar_dict.items():
+        k = tokenizer._convert_token_to_id(k)
+        v = [tokenizer._convert_token_to_id(x[0]) for x in v]
+        if k not in v:
+            v.append(k)
+        while 100 in v:
+            v.remove(100)
+        if len(v) >= 1:
+            similar_char_dict[k] = v
+        else:
+            similar_char_dict[k] = [k]
+
+    return similar_char_dict
+
+
+def get_knowledge_dict(input_knowledge_dict):
+    knowledge_dict = {0: [0], 101: [101], 102: [102]}
+    for k, v in input_knowledge_dict.items():
+        k = tokenizer._convert_token_to_id(k)
+        v = [tokenizer._convert_token_to_id(x[0]) for x in v]
+        if k not in v:
+            v.append(k)
+        while 100 in v:
+            v.remove(100)
+        if len(v) >= 1:
+            knowledge_dict[k] = v
+        else:
+            knowledge_dict[k] = [k]
+
+    return knowledge_dict
+
+
+def get_bug_dict(input_bug_dict, input_ids):
+    bug_dict = {0: [0], 101: [101], 102: [102]}
+    unk_words_dict = {}
+    input_ids = input_ids.squeeze().cpu().numpy().tolist()
+    unk_cnt = 0
+    for x in input_ids:
+        if x == 100:
+            unk_cnt += 1
+    token_list = [tokenizer._convert_id_to_token(x) for x in input_ids]
+    for i in range(len(token_list)):
+        if input_ids[i] in bug_dict:
+            for j in range(len(token_list)):
+                if input_ids[i] == input_ids[j]:
+                    if j in unk_words_dict:
+                        unk_words_dict[i] = unk_words_dict[j]
+                    break
+            continue
+        word = token_list[i]
+        if word not in input_bug_dict:
+            bug_dict[input_ids[i]] = [input_ids[i]]
+            continue
+        candidates = input_bug_dict[word]
+        unk_id = 100
+        unk_list = []
+        for unk_word in [x[0] for x in candidates if tokenizer._convert_token_to_id(x[0]) == unk_id]:
+            adv_seq = deepcopy(token_list)
+            adv_seq[i] = unk_word
+            adv_seq = tokenizer.encode(tokenizer.convert_tokens_to_string(adv_seq))
+            adv_unk_cnt = 0
+            for x in adv_seq:
+                if x == 100:
+                    adv_unk_cnt += 1
+            if adv_unk_cnt == unk_cnt + 1:
+                unk_list = [unk_word]
+                break
+        unk_words_dict[i] = unk_list
+        candidates = [tokenizer._convert_token_to_id(x[0]) for x in candidates]
+        if input_ids[i] not in candidates:
+            candidates.append(input_ids[i])
+        if len(unk_list) == 0:
+            while 100 in candidates:
+                candidates.remove(100)
+        if input_ids[i] not in candidates:
+            candidates.append(input_ids[i])
+        bug_dict[input_ids[i]] = candidates
+
+    return bug_dict, unk_words_dict
+
 # %%
 class CarliniL2:
 
@@ -65,8 +218,11 @@ class CarliniL2:
         self.mask = None
         self.batch_info = None
         self.wv = None
-        self.seq = None
+        self.claim_seq = None
         self.seq_len = None
+        self.kgat_inputs = None
+        self.kgat_mask= None
+        self.kgat_segment = None
         self.init_rand = False  # an experiment, does a random starting point help?
 
     def _compare(self, output, target):
@@ -136,10 +292,10 @@ class CarliniL2:
                 add_start = self.batch_info['attack_start'][i]
                 add_end = self.batch_info['attack_end'][i]
                 for j in range(add_start, add_end):
-                    # print(self.wv[self.seq[0][j].item()])
-                    # if self.seq[0][j].item() not in self.wv.keys():
+                    # print(self.wv[self.claim_seq[0][j].item()])
+                    # if self.claim_seq[0][j].item() not in self.wv.keys():
 
-                    similar_wv = model.bert.embeddings.word_embeddings(torch.LongTensor(self.wv[self.seq[i][j].item()]).cuda())
+                    similar_wv = model.bert.embeddings.word_embeddings(torch.LongTensor(self.wv[self.claim_seq[i][j].item()]).cuda())
                     new_placeholder = input_adv[i, j].data
                     temp_place = new_placeholder.expand_as(similar_wv)
                     new_dist = torch.norm(temp_place - similar_wv.data, 2, -1)  # 2范数距离，一个字一个float
@@ -150,17 +306,20 @@ class CarliniL2:
                     del temp_place
                 batch_adv_sent.append(new_word_list)
 
-            output = model(self.seq, self.seq_len, perturbed=input_adv)['pred']
+            # perturbed = model.pred_model.bert.embeddings.word_embeddings(self.kgat_inputs)
+            # perturbed[:,:self.seq_len,:] = input_adv.repeat(model.evi_num, 1, 1)
+            output = model(self.claim_seq, self.seq_len, perturbed=input_adv)['pred']
             if args.debug_cw:
                 print("output:", batch_adv_sent)
                 print("input_adv:", input_adv)
                 print("output:", output)
-                adv_seq = torch.tensor(self.seq)
+                adv_seq_part = torch.tensor(self.claim_seq)
                 for bi, (add_start, add_end) in enumerate(zip(self.batch_info['attack_start'], self.batch_info['attack_end'])):
-                    adv_seq.data[bi, add_start:add_end] = torch.LongTensor(batch_adv_sent)
-                print("out:", adv_seq)
-                print("out embedding:", model.bert.embeddings.word_embeddings(adv_seq))
-                out = model(adv_seq, self.seq_len)['pred']
+                    adv_seq_part.data[bi, add_start:add_end] = torch.LongTensor(batch_adv_sent)
+                print("out:", adv_seq_part)
+                print("out embedding:", model.pred_model.bert.embeddings.word_embeddings(adv_seq_part))
+                
+                out = model(adv_seq_part, self.seq_len)['pred']
                 print("out:", out)
 
         def reduce_sum(x, keepdim=True):
@@ -221,7 +380,6 @@ class CarliniL2:
             o_best_attack = input_token.cpu().detach().numpy()
         self.o_best_sent = {}
         self.best_sent = {}
-
         # setup input (image) variable, clamp/scale as necessary
         input_var = torch.tensor(input, requires_grad=False)
         self.itereated_var = torch.tensor(input_var)
@@ -338,153 +496,33 @@ class CarliniL2:
 
         return o_best_attack
 
-
 # %%
-def cal_ppl(text, model, tokenizer):
-    assert isinstance(text, list)
-    encodings = tokenizer('\n\n'.join(text), return_tensors='pt')
-    max_length = 128 #model.config.n_positions
-    stride = 128
-    lls = []
-    for i in tqdm(range(0, encodings.input_ids.size(1), stride)):
-        begin_loc = max(i + stride - max_length, 0)
-        end_loc = min(i + stride, encodings.input_ids.size(1))
-        trg_len = end_loc - i  # may be different from stride on last loop
-        input_ids = encodings.input_ids[:, begin_loc:end_loc].to('cuda')
-        target_ids = input_ids.clone()
-        target_ids[:, :-trg_len] = -100
-
-        with torch.no_grad():
-            outputs = model(input_ids, labels=target_ids)
-            log_likelihood = outputs[0] * trg_len
-
-        lls.append(log_likelihood)
-
-    ppl = torch.exp(torch.stack(lls).sum() / end_loc).item()
-
-    return ppl
-
-
-def cal_bert_score(cands, refs, scorer):
-    _, _, f1 = scorer.score(cands, refs)
-    return f1.mean()
-
-
-def transform(seq, unk_words_dict=None, claim_seq_len=None):
-    if claim_seq_len is None:
-        claim_seq_len = len(seq)
-    if unk_words_dict is None:
-        unk_words_dict = {}
-    if not isinstance(seq, list):
-        seq = seq.squeeze().cpu().numpy().tolist()
-    unk_count = 0
-    for x in seq:
-        if x == 100:
-            unk_count += 1
-    if unk_count == 0 or len(unk_words_dict) == 0:
-        return tokenizer.convert_tokens_to_string([tokenizer._convert_id_to_token(x) for x in seq])
-    else:
-        tokens = []
-        for idx, x in enumerate(seq):
-            if x == 100 and idx < claim_seq_len and len(unk_words_dict[idx]) != 0:
-                unk_words = unk_words_dict[idx]
-                unk_word = random.choice(unk_words)
-                tokens.append(unk_word)
-            else:
-                tokens.append(tokenizer._convert_id_to_token(x))
-        return tokenizer.convert_tokens_to_string(tokens)
-
-
-def difference(a, b):
-    tot = 0
-    for x, y in zip(a, b):
-        if x != y:
-            tot += 1
-
-    return tot
-
-
-def get_similar_dict(similar_dict):
-    similar_char_dict = {0: [0], 101: [101], 102: [102]}
-    for k, v in similar_dict.items():
-        k = tokenizer._convert_token_to_id(k)
-        v = [tokenizer._convert_token_to_id(x[0]) for x in v]
-        if k not in v:
-            v.append(k)
-        while 100 in v:
-            v.remove(100)
-        if len(v) >= 1:
-            similar_char_dict[k] = v
+def check_model(model, test_data):
+    model.eval()
+    device = next(model.parameters()).device
+    test_batch = DataLoader(test_data, batch_size=args.batch_size, shuffle=False)
+    correct = mistake = 0
+    for batch_index, batch in enumerate(tqdm(test_batch)):
+        input, mask, segment = batch['kgat input']
+        inp_tensor = torch.tensor(input).to(device)
+        msk_tensor = torch.tensor(mask).to(device)
+        seg_tensor = torch.tensor(segment).to(device)
+        
+        logits = model(inp_tensor, msk_tensor, seg_tensor)
+        prediction = torch.max(logits, 1)[1]
+        ori_prediction = prediction
+        if ori_prediction[0].item() != batch['label'][0]:
+            mistake += 1
         else:
-            similar_char_dict[k] = [k]
+            correct += 1
+    acc = correct/(correct + mistake)
+    print(f"correct={correct}, mistake={mistake}, acc={acc}")
 
-    return similar_char_dict
-
-
-def get_knowledge_dict(input_knowledge_dict):
-    knowledge_dict = {0: [0], 101: [101], 102: [102]}
-    for k, v in input_knowledge_dict.items():
-        k = tokenizer._convert_token_to_id(k)
-        v = [tokenizer._convert_token_to_id(x[0]) for x in v]
-        if k not in v:
-            v.append(k)
-        while 100 in v:
-            v.remove(100)
-        if len(v) >= 1:
-            knowledge_dict[k] = v
-        else:
-            knowledge_dict[k] = [k]
-
-    return knowledge_dict
-
-
-def get_bug_dict(input_bug_dict, input_ids):
-    bug_dict = {0: [0], 101: [101], 102: [102]}
-    unk_words_dict = {}
-    input_ids = input_ids.squeeze().cpu().numpy().tolist()
-    unk_cnt = 0
-    for x in input_ids:
-        if x == 100:
-            unk_cnt += 1
-    token_list = [tokenizer._convert_id_to_token(x) for x in input_ids]
-    for i in range(len(token_list)):
-        if input_ids[i] in bug_dict:
-            for j in range(len(token_list)):
-                if input_ids[i] == input_ids[j]:
-                    if j in unk_words_dict:
-                        unk_words_dict[i] = unk_words_dict[j]
-                    break
-            continue
-        word = token_list[i]
-        if word not in input_bug_dict:
-            bug_dict[input_ids[i]] = [input_ids[i]]
-            continue
-        candidates = input_bug_dict[word]
-        unk_id = 100
-        unk_list = []
-        for unk_word in [x[0] for x in candidates if tokenizer._convert_token_to_id(x[0]) == unk_id]:
-            adv_seq = deepcopy(token_list)
-            adv_seq[i] = unk_word
-            adv_seq = tokenizer.encode(tokenizer.convert_tokens_to_string(adv_seq))
-            adv_unk_cnt = 0
-            for x in adv_seq:
-                if x == 100:
-                    adv_unk_cnt += 1
-            if adv_unk_cnt == unk_cnt + 1:
-                unk_list = [unk_word]
-                break
-        unk_words_dict[i] = unk_list
-        candidates = [tokenizer._convert_token_to_id(x[0]) for x in candidates]
-        if input_ids[i] not in candidates:
-            candidates.append(input_ids[i])
-        if len(unk_list) == 0:
-            while 100 in candidates:
-                candidates.remove(100)
-        if input_ids[i] not in candidates:
-            candidates.append(input_ids[i])
-        bug_dict[input_ids[i]] = candidates
-
-    return bug_dict, unk_words_dict
+def load_KernelGAT(state_dict):
+    bert_model = BertForSequenceEncoder.from_pretrained(args.bert_pretrain)
+    model = inference_model(bert_model, args)
+    model.load_state_dict(state_dict['model'])
+    return model
 
 # %%
 def cw_word_attack(model, test_data):
@@ -492,7 +530,6 @@ def cw_word_attack(model, test_data):
         root_dir = os.path.join('./results', args.attack_model, args.function, 'untargeted')
     else:
         root_dir = os.path.join('./results', args.attack_model, args.function, 'targeted')
-        
     print(f"Start attacking {args.model_name}, function={args.function}, {'untargeted' if args.untargeted else 'targeted'}, number of testing samples = {len(test_data)}")
     adv_correct = 0
     targeted_success = 0
@@ -509,14 +546,8 @@ def cw_word_attack(model, test_data):
     for batch_index, batch in enumerate(tqdm(test_batch)):
         batch_add_start = batch['attack_start']
         batch_add_end = batch['attack_end']
-        # for s, e in zip(batch['attack_start'], batch['attack_end']):
-        #     batch['add_start'].append(1)
-        #     batch['add_end'].append(l)
 
         data = batch['seq'] = torch.stack(batch['seq']).t().to(device)
-        batch['claim_seq'] = torch.stack(batch['claim_seq']).t().to(device)
-        orig_sent = transform(batch['seq'][0])
-
         seq_len = batch['seq_len'] = batch['seq_len'].to(device)
         if args.untargeted:
             attack_targets = batch['label']
@@ -528,7 +559,7 @@ def cw_word_attack(model, test_data):
                     attack_targets = torch.full_like(batch['label'], 1)
             elif args.strategy == 1:
                 if batch['label'][0] < 2:
-                    attack_targets = torch.full_like(batch['label'], 2)
+                    attack_targets = torch.full_like(batch['label'], 4)
                 else:
                     attack_targets = torch.full_like(batch['label'], 0)
         label = batch['label'] = batch['label'].to(device)
@@ -551,7 +582,7 @@ def cw_word_attack(model, test_data):
 
         if args.function == 'all':
             cluster_char_dict = get_similar_dict(batch['similar_dict'])
-            bug_char_dict, unk_words_dict = get_bug_dict(batch['bug_dict'], batch['claim_seq'][0])
+            bug_char_dict, unk_words_dict = get_bug_dict(batch['bug_dict'], batch['seq'][0])
             similar_char_dict = get_knowledge_dict(batch['knowledge_dict'])
 
             for k, v in cluster_char_dict.items():
@@ -574,7 +605,7 @@ def cw_word_attack(model, test_data):
 
             all_dict = similar_char_dict
         elif args.function == 'typo':
-            all_dict, unk_words_dict = get_bug_dict(batch['bug_dict'], batch['claim_seq'][0])
+            all_dict, unk_words_dict = get_bug_dict(batch['bug_dict'], batch['seq'][0])
         elif args.function == 'knowledge':
             all_dict = get_knowledge_dict(batch['knowledge_dict'])
             unk_words_dict = None
@@ -583,23 +614,22 @@ def cw_word_attack(model, test_data):
             unk_words_dict = None
         else:
             raise Exception('Unknown perturbation function.')
-
         cw.wv = all_dict
         cw.mask = cw_mask
-        cw.seq = data
+        cw.claim_seq = data
         cw.batch_info = batch
         cw.seq_len = seq_len
 
         # attack
         adv_data = cw.run(model, input_embedding, attack_targets)
         # retest
-        adv_seq = torch.tensor(batch['seq']).to(device)
+        adv_claim_seq = torch.tensor(batch['seq']).to(device)
         for bi, (add_start, add_end) in enumerate(zip(batch_add_start, batch_add_end)):
             if bi in cw.o_best_sent:
                 for i in range(add_start, add_end):
-                    adv_seq.data[bi, i] = all_dict[adv_seq.data[bi, i].item()][cw.o_best_sent[bi][i - add_start]]
+                    adv_claim_seq.data[bi, i] = all_dict[adv_claim_seq.data[bi, i].item()][cw.o_best_sent[bi][i - add_start]]
 
-        out = model(adv_seq, seq_len)['pred']
+        out = model(adv_claim_seq, seq_len)['pred']
         prediction = torch.max(out, 1)[1]
         orig_correct += batch['orig_correct'].item()
         adv_correct += torch.sum((prediction == label).float()).item()
@@ -608,28 +638,26 @@ def cw_word_attack(model, test_data):
         tot += len(batch['label'])
 
         for i in range(len(batch['label'])):
-            diff = difference(adv_seq[i], data[i])
-            claim_seq_len = batch_add_end[i]
+            diff = difference(adv_claim_seq[i], data[i])
             adv_pickle.append({
                 'index': batch_index,
-                'adv_text': transform(adv_seq[i], unk_words_dict, claim_seq_len=claim_seq_len),
+                'adv_text': transform(adv_claim_seq[i], unk_words_dict),
                 'orig_text': transform(batch['seq'][i]),
-                'raw_text': batch['text'][i],
+                'raw_text': batch['raw_text'][i],
                 'label': label[i].item(),
                 'target': attack_targets[i].item(),
                 'ori_pred': ori_prediction[i].item(),
                 'pred': prediction[i].item(),
                 'diff': diff,
                 'orig_seq': batch['seq'][i].cpu().numpy().tolist(),
-                'adv_seq': adv_seq[i].cpu().numpy().tolist(),
-                'seq_len': batch['seq_len'][i].item(),
-                'claim_seq_len': claim_seq_len
+                'adv_seq': adv_claim_seq[i].cpu().numpy().tolist(),
+                'seq_len': batch['seq_len'][i].item()
             })
-            # assert ori_prediction[i].item() == label[i].item()
+            assert ori_prediction[i].item() == label[i].item()
             if (args.untargeted and prediction[i].item() != label[i].item()) or (not args.untargeted and prediction[i].item() == attack_targets[i].item()):
                 tot_success += 1
                 tot_diff += diff
-                tot_len += claim_seq_len
+                tot_len += batch['seq_len'][i].item()
                 if batch_index % 100 == 0:
                     try:
                         print(("tot:", tot))
@@ -646,7 +674,8 @@ def cw_word_attack(model, test_data):
                             print(("untargeted successful rate: {:.1f}%".format(untargeted_success / tot * 100)))
                     except:
                         continue
-    joblib.dump(adv_pickle, os.path.join(root_dir, f"{'untargeted' if args.untargeted else 'targeted'}-{args.function}-{len(test_data)}-adv_text.pkl"))
+
+    joblib.dump(adv_pickle, os.path.join(root_dir, f'adv_text_{len(test_data)}.pkl'))
     print(("tot:", tot))
     print(("avg_seq_len: {:.1f}".format(0 if tot_success == 0 else tot_len / tot_success)))
     print(("avg_diff: {:.1f}".format(0 if tot_success == 0 else tot_diff / tot_success)))
@@ -660,27 +689,6 @@ def cw_word_attack(model, test_data):
         print(("*targeted successful rate: {:.1f}%".format(targeted_success / tot * 100)))
         print(("untargeted successful rate: {:.1f}%".format(untargeted_success / tot * 100)))
     print(("const confidence:", args.const, args.confidence))
-
-# %%
-def check_model(model, test_data):
-    model.eval()
-    device = next(model.parameters()).device
-    test_batch = DataLoader(test_data, batch_size=args.batch_size, shuffle=False)
-    correct = mistake = 0
-    for batch_index, batch in enumerate(tqdm(test_batch)):
-        batch['seq'] = torch.stack(batch['seq']).t().to(device)
-        batch['seq_len'] = batch['seq_len'].to(device)
-        label = batch['label'] = batch['label'].to(device)
-        out = model(batch['seq'], batch['seq_len'])['pred']
-        prediction = torch.max(out, 1)[1]
-        ori_prediction = prediction
-        if ori_prediction[0].item() != label[0].item():
-            mistake += 1
-        else:
-            correct += 1
-        batch['orig_correct'] = torch.sum((prediction == label).float())
-    acc = correct/(correct + mistake)
-    print(f"correct={correct}, mistake={mistake}, acc={acc}")
 
 # %%
 torch.cuda.manual_seed(args.seed)
@@ -701,6 +709,8 @@ torch.manual_seed(args.seed)
 if torch.cuda.is_available():
     torch.cuda.manual_seed(args.seed)
 test_data = YelpDataset(args.test_data)
+# %%
+# check_model(model, test_data)
 
 # %%
 cw_word_attack(model, test_data)
