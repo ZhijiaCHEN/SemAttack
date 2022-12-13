@@ -10,22 +10,28 @@ import torch
 import json, joblib, random
 
 # %%
+# Label dictionary, map string to integer
 label_dict = {'NOT ENOUGH INFO': 0, 'SUPPORTS': 1, 'REFUTES': 2}
 
+# Load data. The orignal data is in jsonl format where each line is a json.
 data = []
 with open(args.train_data, encoding='utf-8') as f:
     for l in f.readlines():
         data.append(json.loads(l))
 
+# Construct the training data as a list of key-value pairs (dictionary). The "claim" field is the input data and it consists of claim and the corresponding supports. 
 train = [{"label": x["label"], "claim": x["claim"] + " " + x["support"]} for x in data]
 #train = [{"label": x["label"], "claim": x["claim"]} for x in data]
 
+# Construct the testing data
 data = []
 with open(args.test_data, encoding='utf-8') as f:
     for l in f.readlines():
         data.append(json.loads(l))
 test = [{"label": x["label"], "claim": x["claim"] + " " + x["support"]} for x in data]
 #test = [{"label": x["label"], "claim": x["claim"]} for x in data]
+
+# If the argument for the number of samples is given, we will randomly select the samples. Can be useful when debugging with small portion of data. 
 if args.sample > 0:
     train = random.sample(train, args.sample)
     test = random.sample(test, args.sample)
